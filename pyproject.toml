@@ -1,0 +1,24 @@
+[project]
+name = "arabic-morph-mi"
+version = "0.1.0"
+description = "Mechanistic probes for Arabic root-pattern morphology."
+requires-python = ">=3.10"
+dependencies = [
+  "accelerate>=1.0.1",
+  "matplotlib>=3.9",
+  "numpy>=1.26",
+  "scikit-learn>=1.5",
+  "sentencepiece>=0.2.0",
+  "torch>=2.2",
+  "transformers>=4.56.2",
+]
+
+[project.scripts]
+run-arabic-morph-probes = "arabic_morph_mi.run:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
