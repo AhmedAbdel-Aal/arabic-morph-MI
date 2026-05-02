@@ -18,13 +18,16 @@ Run:
   --surface base
 ```
 
-The script runs five direct probes:
+The script runs template and root probes:
 
 - real templates, random split
 - nonce templates, random split
 - nonce templates, held-out roots
 - train real, test nonce on overlapping templates
 - train nonce, test real on overlapping templates
+- real roots, random split
+- nonce roots, random split
+- nonce roots, held-out templates
 
 Each probe also includes:
 

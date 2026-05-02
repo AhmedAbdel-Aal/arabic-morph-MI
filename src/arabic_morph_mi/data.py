@@ -11,7 +11,7 @@ ARABIC_DIACRITICS = re.compile(r"[\u0610-\u061A\u064B-\u065F\u0670\u06D6-\u06ED]
 @dataclass(frozen=True)
 class Item:
     text: str
-    label: str
+    template: str
     root: str
     source: str
     base_form: str
@@ -46,7 +46,7 @@ def make_items(payload: dict, source: str, surface: str) -> list[Item]:
         items.append(
             Item(
                 text=remove_diacritics(text),
-                label=row["template"],
+                template=row["template"],
                 root=normalize_root(row["root"]),
                 source=source,
                 base_form=remove_diacritics(row["base_form"]),
@@ -61,16 +61,26 @@ def make_items(payload: dict, source: str, surface: str) -> list[Item]:
     return items
 
 
-def with_labels(items: list[Item]) -> tuple[list[str], list[int]]:
-    labels = sorted({item.label for item in items})
+def with_labels(items: list[Item], target: str) -> tuple[list[str], list[int]]:
+    if target not in {"template", "root"}:
+        raise ValueError("target must be 'template' or 'root'")
+    labels = sorted({getattr(item, target) for item in items})
     label_to_id = {label: idx for idx, label in enumerate(labels)}
-    y = [label_to_id[item.label] for item in items]
+    y = [label_to_id[getattr(item, target)] for item in items]
     return labels, y
 
 
 def overlap_by_label(train_items: list[Item], test_items: list[Item]) -> tuple[list[Item], list[Item]]:
-    labels = {item.label for item in train_items} & {item.label for item in test_items}
+    labels = {item.template for item in train_items} & {item.template for item in test_items}
     return (
-        [item for item in train_items if item.label in labels],
-        [item for item in test_items if item.label in labels],
+        [item for item in train_items if item.template in labels],
+        [item for item in test_items if item.template in labels],
     )
+
+
+def keep_labels_with_min_count(items: list[Item], target: str, min_count: int) -> list[Item]:
+    counts: dict[str, int] = {}
+    for item in items:
+        label = getattr(item, target)
+        counts[label] = counts.get(label, 0) + 1
+    return [item for item in items if counts[getattr(item, target)] >= min_count]

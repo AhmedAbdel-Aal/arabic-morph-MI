@@ -5,12 +5,19 @@ from pathlib import Path
 
 import numpy as np
 
-from arabic_morph_mi.data import Item, load_productivity_dataset, make_items, overlap_by_label, with_labels
+from arabic_morph_mi.data import (
+    Item,
+    keep_labels_with_min_count,
+    load_productivity_dataset,
+    make_items,
+    overlap_by_label,
+    with_labels,
+)
 from arabic_morph_mi.io import timestamp, write_json
 from arabic_morph_mi.model import encode_last_token, load_model
 from arabic_morph_mi.plot import plot_curves
 from arabic_morph_mi.probe import layer_probe
-from arabic_morph_mi.splits import heldout_root_split, random_split
+from arabic_morph_mi.splits import heldout_root_split, heldout_template_split, one_per_label_test_split, random_split
 
 
 def parse_args() -> argparse.Namespace:
@@ -26,9 +33,13 @@ def parse_args() -> argparse.Namespace:
     return parser.parse_args()
 
 
-def explicit_split(train_items: list[Item], test_items: list[Item]) -> tuple[list[Item], list[str], list[int], np.ndarray, np.ndarray]:
+def explicit_split(
+    train_items: list[Item],
+    test_items: list[Item],
+    target: str,
+) -> tuple[list[Item], list[str], list[int], np.ndarray, np.ndarray]:
     items = train_items + test_items
-    labels, y = with_labels(items)
+    labels, y = with_labels(items, target)
     train = np.arange(len(train_items))
     test = np.arange(len(train_items), len(items))
     return items, labels, y, train, test
@@ -65,19 +76,31 @@ def main() -> None:
 
     experiments = {}
 
-    labels, y = with_labels(real)
+    labels, y = with_labels(real, "template")
     train, test = random_split(y, args.test_size, args.seed)
     experiments["real_templates_random"] = (real, labels, y, train, test)
 
-    labels, y = with_labels(nonce)
+    labels, y = with_labels(nonce, "template")
     train, test = random_split(y, args.test_size, args.seed + 1)
     experiments["nonce_templates_random"] = (nonce, labels, y, train, test)
 
     train, test = heldout_root_split(nonce, y, args.test_size, args.seed + 2)
     experiments["nonce_templates_heldout_roots"] = (nonce, labels, y, train, test)
 
-    experiments["train_real_test_nonce_overlap"] = explicit_split(real_overlap, nonce_overlap)
-    experiments["train_nonce_test_real_overlap"] = explicit_split(nonce_overlap, real_overlap)
+    experiments["train_real_test_nonce_overlap"] = explicit_split(real_overlap, nonce_overlap, "template")
+    experiments["train_nonce_test_real_overlap"] = explicit_split(nonce_overlap, real_overlap, "template")
+
+    real_roots = keep_labels_with_min_count(real, "root", min_count=2)
+    labels, y = with_labels(real_roots, "root")
+    train, test = one_per_label_test_split(y, args.seed + 3)
+    experiments["real_roots_random"] = (real_roots, labels, y, train, test)
+
+    labels, y = with_labels(nonce, "root")
+    train, test = random_split(y, args.test_size, args.seed + 4)
+    experiments["nonce_roots_random"] = (nonce, labels, y, train, test)
+
+    train, test = heldout_template_split(nonce, y, args.test_size, args.seed + 5)
+    experiments["nonce_roots_heldout_templates"] = (nonce, labels, y, train, test)
 
     texts = sorted({item.text for exp in experiments.values() for item in exp[0]})
     tokenizer, model, input_device = load_model(args.model, args.dtype)
