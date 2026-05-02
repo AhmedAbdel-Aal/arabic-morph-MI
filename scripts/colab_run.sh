@@ -28,11 +28,7 @@ else
 fi
 
 cd "$WORKDIR"
-
-step "Installing Python dependencies"
-python -m pip install --upgrade pip
-python -m pip install -e .
-
+  
 step "Checking dataset"
 if [ ! -f "$DATA_PATH" ]; then
   echo "Missing dataset: $WORKDIR/$DATA_PATH"
