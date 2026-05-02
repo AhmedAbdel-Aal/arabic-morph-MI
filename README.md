@@ -16,7 +16,8 @@ Run:
   --data data/productivity_dataset.json \
   --model Qwen/Qwen3-1.7B-Base \
   --surface base \
-  --pooling last
+  --pooling last \
+  --run-id E03
 ```
 
 The script runs template and root probes:
@@ -55,7 +56,7 @@ Then run the script:
 
 ```bash
 %cd /content/arabic-morph-MI
-!MODEL=Qwen/Qwen3-1.7B-Base SURFACE=base POOLING=last BATCH_SIZE=4 bash scripts/colab_run.sh
+!MODEL=Qwen/Qwen3-1.7B-Base SURFACE=base POOLING=last RUN_ID=E03 BATCH_SIZE=4 bash scripts/colab_run.sh
 ```
 
 The script prints each step, installs the repo, checks that `data/productivity_dataset.json` exists, runs the probes, and prints the output files.
@@ -63,9 +64,9 @@ The script prints each step, installs the repo, checks that `data/productivity_d
 Useful ablation runs:
 
 ```bash
-!MODEL=Qwen/Qwen3-1.7B-Base SURFACE=base POOLING=first BATCH_SIZE=4 bash scripts/colab_run.sh
-!MODEL=Qwen/Qwen3-1.7B-Base SURFACE=base POOLING=mean BATCH_SIZE=4 bash scripts/colab_run.sh
-!MODEL=Qwen/Qwen3-1.7B-Base SURFACE=full POOLING=last BATCH_SIZE=4 bash scripts/colab_run.sh
+!MODEL=Qwen/Qwen3-1.7B-Base SURFACE=base POOLING=first RUN_ID=E04a BATCH_SIZE=4 bash scripts/colab_run.sh
+!MODEL=Qwen/Qwen3-1.7B-Base SURFACE=base POOLING=mean RUN_ID=E04b BATCH_SIZE=4 bash scripts/colab_run.sh
+!MODEL=Qwen/Qwen3-1.7B-Base SURFACE=full POOLING=last RUN_ID=E05 BATCH_SIZE=4 bash scripts/colab_run.sh
 ```
 
 Each run writes `tokenization_diagnostics.json`, `representation_diagnostics.json`, `results.json`, and `curves.png`.

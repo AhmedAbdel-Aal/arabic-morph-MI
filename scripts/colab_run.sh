@@ -8,6 +8,7 @@ SURFACE="${SURFACE:-base}"
 POOLING="${POOLING:-last}"
 BATCH_SIZE="${BATCH_SIZE:-4}"
 DATA_PATH="${DATA_PATH:-data/productivity_dataset.json}"
+RUN_ID="${RUN_ID:-}"
 
 step() {
   printf "\n[%s] %s\n" "$(date -u +%H:%M:%S)" "$1"
@@ -21,6 +22,7 @@ echo "surface:    $SURFACE"
 echo "pooling:    $POOLING"
 echo "batch size: $BATCH_SIZE"
 echo "data path:  $DATA_PATH"
+echo "run id:     ${RUN_ID:-auto}"
 
 step "Cloning or updating repository"
 if [ -d "$WORKDIR/.git" ]; then
@@ -58,12 +60,18 @@ for key in ["real_roots", "nonce_roots"]:
 PY
 
 step "Running probes"
-python scripts/run_probes.py \
-  --data "$DATA_PATH" \
-  --model "$MODEL" \
-  --surface "$SURFACE" \
-  --pooling "$POOLING" \
+CMD=(
+  python scripts/run_probes.py
+  --data "$DATA_PATH"
+  --model "$MODEL"
+  --surface "$SURFACE"
+  --pooling "$POOLING"
   --batch-size "$BATCH_SIZE"
+)
+if [ -n "$RUN_ID" ]; then
+  CMD+=(--run-id "$RUN_ID")
+fi
+"${CMD[@]}"
 
 step "Finished"
 find results -maxdepth 2 -type f -print | sort | tail -20

@@ -27,6 +27,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--model", default="Qwen/Qwen3-1.7B-Base")
     parser.add_argument("--surface", choices=["base", "full"], default="base")
     parser.add_argument("--pooling", choices=["last", "first", "mean"], default="last")
+    parser.add_argument("--run-id", help="Optional output folder name under --output-dir, e.g. E03.")
     parser.add_argument("--output-dir", default="results")
     parser.add_argument("--batch-size", type=int, default=4)
     parser.add_argument("--test-size", type=float, default=0.2)
@@ -129,7 +130,10 @@ def main() -> None:
     hidden_by_text = encode_texts(texts, tokenizer, model, input_device, args.batch_size, args.pooling)
     representation = representation_diagnostics(hidden_by_text)
 
-    run_dir = Path(args.output_dir) / f"{timestamp()}_{args.model.split('/')[-1]}_{args.surface}_{args.pooling}"
+    run_name = args.run_id or f"{timestamp()}_{args.model.split('/')[-1]}_{args.surface}_{args.pooling}"
+    run_dir = Path(args.output_dir) / run_name
+    if run_dir.exists():
+        raise SystemExit(f"Output folder already exists: {run_dir}")
     results = {
         name: run_one(
             name,
