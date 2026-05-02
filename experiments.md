@@ -4,8 +4,8 @@ Use this table as the source of truth for what has been run, what changed, and w
 
 | ID | Status | Date | Model | Surface | Purpose | Command | Output / Interpretation |
 |---|---|---|---|---|---|---|---|
-| E01 | done | 2026-05-02 | `Qwen/Qwen3-1.7B-Base` | `base` | First v2 smoke test on template probes only | historical run; superseded by E02 command | [interpretation](results/20260502T140036Z_Qwen3-1.7B-Base_base/interpretation.md) |
-| E02 | done | 2026-05-02 | `Qwen/Qwen3-1.7B-Base` | `base` | Template + root baseline with last-token pooling | `MODEL=Qwen/Qwen3-1.7B-Base SURFACE=base POOLING=last BATCH_SIZE=4 bash scripts/colab_run.sh` | [interpretation](results/20260502T142359Z_Qwen3-1.7B-Base_base/interpretation.md) |
+| E01 | done | 2026-05-02 | `Qwen/Qwen3-1.7B-Base` | `base` | First v2 smoke test on template probes only | historical run; superseded by E02 command | [interpretation](results/E01_Qwen3-1.7B-Base_base_template/interpretation.md) |
+| E02 | done | 2026-05-02 | `Qwen/Qwen3-1.7B-Base` | `base` | Template + root baseline with last-token pooling | `MODEL=Qwen/Qwen3-1.7B-Base SURFACE=base POOLING=last BATCH_SIZE=4 bash scripts/colab_run.sh` | [interpretation](results/E02_Qwen3-1.7B-Base_base_template_root/interpretation.md) |
 | E03 | code ready | TBD | `Qwen/Qwen3-1.7B-Base` | `base` | Tokenization diagnostics for layer-0 weakness and early-layer spike | `MODEL=Qwen/Qwen3-1.7B-Base SURFACE=base POOLING=last BATCH_SIZE=4 bash scripts/colab_run.sh` | TBD |
 | E04a | code ready | TBD | `Qwen/Qwen3-1.7B-Base` | `base` | First-subword pooling ablation | `MODEL=Qwen/Qwen3-1.7B-Base SURFACE=base POOLING=first BATCH_SIZE=4 bash scripts/colab_run.sh` | TBD |
 | E04b | code ready | TBD | `Qwen/Qwen3-1.7B-Base` | `base` | Mean-pooling ablation | `MODEL=Qwen/Qwen3-1.7B-Base SURFACE=base POOLING=mean BATCH_SIZE=4 bash scripts/colab_run.sh` | TBD |
