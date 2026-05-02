@@ -28,6 +28,15 @@ def char_ngram_score(texts: list[str], y: np.ndarray, train: np.ndarray, test: n
     return float(accuracy_score(y[test], pred))
 
 
+def word_type_control_labels(texts: list[str], y: np.ndarray, seed: int) -> np.ndarray:
+    rng = np.random.default_rng(seed)
+    labels, counts = np.unique(y, return_counts=True)
+    probs = counts / counts.sum()
+    word_types = sorted(set(texts))
+    label_by_type = {text: int(rng.choice(labels, p=probs)) for text in word_types}
+    return np.array([label_by_type[text] for text in texts])
+
+
 def layer_probe(
     X: np.ndarray,
     y: list[int],
@@ -35,22 +44,32 @@ def layer_probe(
     texts: list[str],
     train: np.ndarray,
     test: np.ndarray,
+    control_seed: int = 0,
 ) -> dict:
     y_arr = np.asarray(y)
+    y_control = word_type_control_labels(texts, y_arr, control_seed)
     accuracies = []
+    control_accuracies = []
     for layer in range(X.shape[1]):
         score, _ = train_probe(X[:, layer, :], y_arr, train, test)
+        control_score, _ = train_probe(X[:, layer, :], y_control, train, test)
         accuracies.append(score)
-        print(f"layer {layer:02d}: accuracy={score:.3f}")
+        control_accuracies.append(control_score)
+        print(f"layer {layer:02d}: accuracy={score:.3f} control={control_score:.3f}")
 
     peak_layer = int(np.argmax(accuracies))
     peak_accuracy, pred = train_probe(X[:, peak_layer, :], y_arr, train, test)
     label_ids = list(range(len(labels)))
+    selectivity = np.array(accuracies) - np.array(control_accuracies)
 
     return {
         "accuracy_per_layer": accuracies,
+        "control_accuracy_per_layer": control_accuracies,
+        "selectivity_per_layer": selectivity.tolist(),
         "peak_layer": peak_layer,
         "peak_accuracy": float(peak_accuracy),
+        "peak_control_accuracy": float(control_accuracies[peak_layer]),
+        "peak_selectivity": float(selectivity[peak_layer]),
         "ngram_accuracy": char_ngram_score(texts, y_arr, train, test),
         "chance": 1 / len(labels),
         "confusion_matrix": confusion_matrix(y_arr[test], pred, labels=label_ids).tolist(),

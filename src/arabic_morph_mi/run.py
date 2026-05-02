@@ -34,11 +34,20 @@ def explicit_split(train_items: list[Item], test_items: list[Item]) -> tuple[lis
     return items, labels, y, train, test
 
 
-def run_one(name: str, items: list[Item], labels: list[str], y: list[int], train, test, hidden_by_text: dict[str, np.ndarray]) -> dict:
+def run_one(
+    name: str,
+    items: list[Item],
+    labels: list[str],
+    y: list[int],
+    train,
+    test,
+    hidden_by_text: dict[str, np.ndarray],
+    control_seed: int,
+) -> dict:
     texts = [item.text for item in items]
     X = np.stack([hidden_by_text[text] for text in texts])
     print(f"\n{name}: {len(items)} items, {len(labels)} labels")
-    result = layer_probe(X, y, labels, texts, train, test)
+    result = layer_probe(X, y, labels, texts, train, test, control_seed=control_seed)
     result["labels"] = labels
     result["n_items"] = len(items)
     result["train_size"] = int(len(train))
@@ -76,8 +85,8 @@ def main() -> None:
 
     run_dir = Path(args.output_dir) / f"{timestamp()}_{args.model.split('/')[-1]}_{args.surface}"
     results = {
-        name: run_one(name, items, labels, y, train, test, hidden_by_text)
-        for name, (items, labels, y, train, test) in experiments.items()
+        name: run_one(name, items, labels, y, train, test, hidden_by_text, control_seed=args.seed + i)
+        for i, (name, (items, labels, y, train, test)) in enumerate(experiments.items())
     }
 
     write_json(

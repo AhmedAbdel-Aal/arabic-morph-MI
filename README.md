@@ -26,6 +26,12 @@ The script runs five direct probes:
 - train real, test nonce on overlapping templates
 - train nonce, test real on overlapping templates
 
+Each probe also includes:
+
+- a Hewitt-Liang-style control task: each word type is assigned a random template label, and the same probe is trained on that control task
+- selectivity: real probe accuracy minus control-task accuracy
+- a character n-gram baseline on the same split
+
 Each run writes:
 
 ```text
@@ -35,13 +41,17 @@ results/<timestamp>_<model>_<surface>/curves.png
 
 ## Colab
 
-In a Colab cell:
+In Colab, use separate cells. First clone the repo:
 
 ```bash
-!REPO_URL=https://github.com/AhmedAbdel-Aal/arabic-morph-MI.git \
-MODEL=Qwen/Qwen3-1.7B-Base \
-BATCH_SIZE=4 \
-bash <(curl -fsSL https://raw.githubusercontent.com/AhmedAbdel-Aal/arabic-morph-MI/main/scripts/colab_run.sh)
+!git clone https://github.com/AhmedAbdel-Aal/arabic-morph-MI.git
+```
+
+Then run the script:
+
+```bash
+%cd /content/arabic-morph-MI
+!MODEL=Qwen/Qwen3-1.7B-Base BATCH_SIZE=4 bash scripts/colab_run.sh
 ```
 
 The script prints each step, installs the repo, checks that `data/productivity_dataset.json` exists, runs the probes, and prints the output files.
