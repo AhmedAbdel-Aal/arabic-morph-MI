@@ -44,3 +44,22 @@ Summary:
 | nonce roots held-out templates | root | 1.000 | 0.100 | 0.900 | 0.950 | 0.050 |
 
 Interpretation: template probing remains the main positive morphology result because Qwen beats n-grams and control tasks across nonce and transfer settings. Root identity is also highly decodable, but the nonce-root n-gram baseline is already 0.95, so root recoverability is mostly surface-solvable in this dataset.
+
+## 2026-05-03: `E03`
+
+Model: `Qwen/Qwen3-1.7B-Base`  
+Dataset: `data/productivity_dataset.json`  
+Input: isolated base forms  
+Pooling: last token  
+Output folder: `results/E03`
+
+This run reproduces E02 with tokenization and representation diagnostics.
+
+Summary:
+
+- Probe metrics reproduce E02.
+- 213 out of 230 unique strings are multi-token.
+- Layer 0 weakness is likely partly caused by last-token pooling in a causal decoder: at layer 0, the final subword cannot yet attend to previous subwords.
+- Layers 3-20 show severe activation outlier / dimensional-collapse behavior in Qwen3-1.7B: 90-95% variance is captured by one component.
+
+Interpretation: the early-layer morphology spike is real in the probe curves, but E03 shows it must be interpreted through tokenization and representation geometry. The next required check is pooling ablation: last vs first vs mean.
