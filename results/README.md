@@ -63,3 +63,22 @@ Summary:
 - Layers 3-20 show severe activation outlier / dimensional-collapse behavior in Qwen3-1.7B: 90-95% variance is captured by one component.
 
 Interpretation: the early-layer morphology spike is real in the probe curves, but E03 shows it must be interpreted through tokenization and representation geometry. The next required check is pooling ablation: last vs first vs mean.
+
+## 2026-05-03: `E04a`
+
+Model: `Qwen/Qwen3-1.7B-Base`  
+Dataset: `data/productivity_dataset.json`  
+Input: isolated base forms  
+Pooling: first token  
+Output folder: `results/E04a`
+
+This run is the first-subword pooling ablation.
+
+Summary:
+
+- First pooling is much weaker than last pooling on almost every important probe.
+- Template probes drop sharply: nonce random templates fall from 0.950 to 0.400, and nonce held-out-root templates fall from 1.000 to 0.650.
+- Root probing shows the strongest collapse: nonce held-out-template root probing falls from 1.000 to 0.100.
+- This supports the interpretation that last-token pooling gives a composed word representation in a causal decoder, while first-token pooling often sees only a partial prefix/subword.
+
+Interpretation: E04a does not invalidate E03. It clarifies that the successful E03 representation depends on extracting a vector that can aggregate over subword pieces. Mean pooling is the next required ablation.
