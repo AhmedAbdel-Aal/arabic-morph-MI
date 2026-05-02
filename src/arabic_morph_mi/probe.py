@@ -45,6 +45,7 @@ def layer_probe(
     train: np.ndarray,
     test: np.ndarray,
     control_seed: int = 0,
+    token_counts: list[int] | None = None,
 ) -> dict:
     y_arr = np.asarray(y)
     y_control = word_type_control_labels(texts, y_arr, control_seed)
@@ -61,17 +62,36 @@ def layer_probe(
     peak_accuracy, pred = train_probe(X[:, peak_layer, :], y_arr, train, test)
     label_ids = list(range(len(labels)))
     selectivity = np.array(accuracies) - np.array(control_accuracies)
+    layer_indices = list(range(X.shape[1]))
+    if X.shape[1] == 1:
+        depths = [0.0]
+    else:
+        depths = [idx / (X.shape[1] - 1) for idx in layer_indices]
+
+    token_count_accuracy = {}
+    if token_counts is not None:
+        token_counts_arr = np.asarray(token_counts)
+        for count in sorted(set(token_counts_arr[test].tolist())):
+            mask = token_counts_arr[test] == count
+            token_count_accuracy[str(int(count))] = {
+                "n": int(mask.sum()),
+                "accuracy": float(accuracy_score(y_arr[test][mask], pred[mask])),
+            }
 
     return {
+        "layer_indices": layer_indices,
+        "normalized_layer_depth": depths,
         "accuracy_per_layer": accuracies,
         "control_accuracy_per_layer": control_accuracies,
         "selectivity_per_layer": selectivity.tolist(),
         "peak_layer": peak_layer,
+        "peak_normalized_depth": depths[peak_layer],
         "peak_accuracy": float(peak_accuracy),
         "peak_control_accuracy": float(control_accuracies[peak_layer]),
         "peak_selectivity": float(selectivity[peak_layer]),
         "ngram_accuracy": char_ngram_score(texts, y_arr, train, test),
         "chance": 1 / len(labels),
+        "token_count_accuracy_at_peak": token_count_accuracy,
         "confusion_matrix": confusion_matrix(y_arr[test], pred, labels=label_ids).tolist(),
         "classification_report": classification_report(
             y_arr[test],

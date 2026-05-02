@@ -13,8 +13,9 @@ from arabic_morph_mi.data import (
     overlap_by_label,
     with_labels,
 )
+from arabic_morph_mi.diagnostics import representation_diagnostics
 from arabic_morph_mi.io import timestamp, write_json
-from arabic_morph_mi.model import encode_last_token, load_model
+from arabic_morph_mi.model import encode_texts, load_model, tokenization_diagnostics
 from arabic_morph_mi.plot import plot_curves
 from arabic_morph_mi.probe import layer_probe
 from arabic_morph_mi.splits import heldout_root_split, heldout_template_split, one_per_label_test_split, random_split
@@ -25,6 +26,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--data", default="data/productivity_dataset.json")
     parser.add_argument("--model", default="Qwen/Qwen3-1.7B-Base")
     parser.add_argument("--surface", choices=["base", "full"], default="base")
+    parser.add_argument("--pooling", choices=["last", "first", "mean"], default="last")
     parser.add_argument("--output-dir", default="results")
     parser.add_argument("--batch-size", type=int, default=4)
     parser.add_argument("--test-size", type=float, default=0.2)
@@ -54,11 +56,22 @@ def run_one(
     test,
     hidden_by_text: dict[str, np.ndarray],
     control_seed: int,
+    token_count_by_text: dict[str, int],
 ) -> dict:
     texts = [item.text for item in items]
     X = np.stack([hidden_by_text[text] for text in texts])
+    token_counts = [token_count_by_text[text] for text in texts]
     print(f"\n{name}: {len(items)} items, {len(labels)} labels")
-    result = layer_probe(X, y, labels, texts, train, test, control_seed=control_seed)
+    result = layer_probe(
+        X,
+        y,
+        labels,
+        texts,
+        train,
+        test,
+        control_seed=control_seed,
+        token_counts=token_counts,
+    )
     result["labels"] = labels
     result["n_items"] = len(items)
     result["train_size"] = int(len(train))
@@ -104,20 +117,49 @@ def main() -> None:
 
     texts = sorted({item.text for exp in experiments.values() for item in exp[0]})
     tokenizer, model, input_device = load_model(args.model, args.dtype)
-    hidden_by_text = encode_last_token(texts, tokenizer, model, input_device, args.batch_size)
+    tokenization = tokenization_diagnostics(texts, tokenizer)
+    token_count_by_text = {item["text"]: item["n_tokens"] for item in tokenization["items"]}
+    print(
+        "tokenization:",
+        f"n={tokenization['n_texts']}",
+        f"min={tokenization['min_tokens']}",
+        f"max={tokenization['max_tokens']}",
+        f"mean={tokenization['mean_tokens']:.2f}",
+    )
+    hidden_by_text = encode_texts(texts, tokenizer, model, input_device, args.batch_size, args.pooling)
+    representation = representation_diagnostics(hidden_by_text)
 
-    run_dir = Path(args.output_dir) / f"{timestamp()}_{args.model.split('/')[-1]}_{args.surface}"
+    run_dir = Path(args.output_dir) / f"{timestamp()}_{args.model.split('/')[-1]}_{args.surface}_{args.pooling}"
     results = {
-        name: run_one(name, items, labels, y, train, test, hidden_by_text, control_seed=args.seed + i)
+        name: run_one(
+            name,
+            items,
+            labels,
+            y,
+            train,
+            test,
+            hidden_by_text,
+            control_seed=args.seed + i,
+            token_count_by_text=token_count_by_text,
+        )
         for i, (name, (items, labels, y, train, test)) in enumerate(experiments.items())
     }
 
+    write_json(run_dir / "tokenization_diagnostics.json", tokenization)
+    write_json(run_dir / "representation_diagnostics.json", representation)
     write_json(
         run_dir / "results.json",
         {
             "model": args.model,
             "surface": args.surface,
+            "pooling": args.pooling,
             "data": str(args.data),
+            "tokenization_summary": {k: v for k, v in tokenization.items() if k != "items"},
+            "representation_summary": {
+                "n_texts": representation["n_texts"],
+                "n_layers": representation["n_layers"],
+                "hidden_size": representation["hidden_size"],
+            },
             "results": results,
         },
     )

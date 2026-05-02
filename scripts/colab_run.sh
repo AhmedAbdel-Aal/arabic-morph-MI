@@ -5,6 +5,7 @@ REPO_URL="${REPO_URL:-https://github.com/AhmedAbdel-Aal/arabic-morph-MI.git}"
 WORKDIR="${WORKDIR:-/content/arabic-morph-MI}"
 MODEL="${MODEL:-Qwen/Qwen3-1.7B-Base}"
 SURFACE="${SURFACE:-base}"
+POOLING="${POOLING:-last}"
 BATCH_SIZE="${BATCH_SIZE:-4}"
 DATA_PATH="${DATA_PATH:-data/productivity_dataset.json}"
 
@@ -17,6 +18,7 @@ echo "repo:       $REPO_URL"
 echo "workdir:    $WORKDIR"
 echo "model:      $MODEL"
 echo "surface:    $SURFACE"
+echo "pooling:    $POOLING"
 echo "batch size: $BATCH_SIZE"
 echo "data path:  $DATA_PATH"
 
@@ -28,6 +30,10 @@ else
 fi
 
 cd "$WORKDIR"
+
+step "Installing Python dependencies"
+python -m pip install --upgrade pip
+python -m pip install -e .
   
 step "Checking dataset"
 if [ ! -f "$DATA_PATH" ]; then
@@ -56,6 +62,7 @@ python scripts/run_probes.py \
   --data "$DATA_PATH" \
   --model "$MODEL" \
   --surface "$SURFACE" \
+  --pooling "$POOLING" \
   --batch-size "$BATCH_SIZE"
 
 step "Finished"

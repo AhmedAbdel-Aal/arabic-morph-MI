@@ -15,7 +15,8 @@ Run:
 ../.venv/bin/python scripts/run_probes.py \
   --data data/productivity_dataset.json \
   --model Qwen/Qwen3-1.7B-Base \
-  --surface base
+  --surface base \
+  --pooling last
 ```
 
 The script runs template and root probes:
@@ -31,15 +32,15 @@ The script runs template and root probes:
 
 Each probe also includes:
 
-- a Hewitt-Liang-style control task: each word type is assigned a random template label, and the same probe is trained on that control task
+- a Hewitt-Liang-style control task: each word type is assigned a random label from the current target label set, and the same probe is trained on that control task
 - selectivity: real probe accuracy minus control-task accuracy
 - a character n-gram baseline on the same split
 
 Each run writes:
 
 ```text
-results/<timestamp>_<model>_<surface>/results.json
-results/<timestamp>_<model>_<surface>/curves.png
+results/<timestamp>_<model>_<surface>_<pooling>/results.json
+results/<timestamp>_<model>_<surface>_<pooling>/curves.png
 ```
 
 ## Colab
@@ -54,7 +55,17 @@ Then run the script:
 
 ```bash
 %cd /content/arabic-morph-MI
-!MODEL=Qwen/Qwen3-1.7B-Base BATCH_SIZE=4 bash scripts/colab_run.sh
+!MODEL=Qwen/Qwen3-1.7B-Base SURFACE=base POOLING=last BATCH_SIZE=4 bash scripts/colab_run.sh
 ```
 
 The script prints each step, installs the repo, checks that `data/productivity_dataset.json` exists, runs the probes, and prints the output files.
+
+Useful ablation runs:
+
+```bash
+!MODEL=Qwen/Qwen3-1.7B-Base SURFACE=base POOLING=first BATCH_SIZE=4 bash scripts/colab_run.sh
+!MODEL=Qwen/Qwen3-1.7B-Base SURFACE=base POOLING=mean BATCH_SIZE=4 bash scripts/colab_run.sh
+!MODEL=Qwen/Qwen3-1.7B-Base SURFACE=full POOLING=last BATCH_SIZE=4 bash scripts/colab_run.sh
+```
+
+Each run writes `tokenization_diagnostics.json`, `representation_diagnostics.json`, `results.json`, and `curves.png`.
