@@ -32,3 +32,16 @@ Each run writes:
 results/<timestamp>_<model>_<surface>/results.json
 results/<timestamp>_<model>_<surface>/curves.png
 ```
+
+## Colab
+
+In a Colab cell:
+
+```bash
+!REPO_URL=https://github.com/AhmedAbdel-Aal/arabic-morph-MI.git \
+MODEL=Qwen/Qwen3-1.7B-Base \
+BATCH_SIZE=4 \
+bash <(curl -fsSL https://raw.githubusercontent.com/AhmedAbdel-Aal/arabic-morph-MI/main/scripts/colab_run.sh)
+```
+
+The script prints each step, installs the repo, checks that `data/productivity_dataset.json` exists, runs the probes, and prints the output files.
