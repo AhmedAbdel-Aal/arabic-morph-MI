@@ -1,5 +1,7 @@
 # Results Log
 
+Cross-study synthesis: [cross_study_interpretation.md](cross_study_interpretation.md)
+
 ## 2026-05-02: `E01_Qwen3-1.7B-Base_base_template`
 
 Model: `Qwen/Qwen3-1.7B-Base`  
@@ -82,3 +84,41 @@ Summary:
 - This supports the interpretation that last-token pooling gives a composed word representation in a causal decoder, while first-token pooling often sees only a partial prefix/subword.
 
 Interpretation: E04a does not invalidate E03. It clarifies that the successful E03 representation depends on extracting a vector that can aggregate over subword pieces. Mean pooling is the next required ablation.
+
+## 2026-05-03: `E04b`
+
+Model: `Qwen/Qwen3-1.7B-Base`  
+Dataset: `data/productivity_dataset.json`  
+Input: isolated base forms  
+Pooling: mean over subword tokens  
+Output folder: `results/E04b`
+
+This run is the mean-pooling ablation.
+
+Summary:
+
+- Mean pooling restores most of the signal that collapsed under first-token pooling.
+- Template probing remains strong: nonce held-out-root templates reach 0.950, compared with 0.600 for the n-gram baseline.
+- The key root diagnostic recovers: nonce roots held out by template move from 0.100 with first pooling to 0.950 with mean pooling.
+- Mean pooling can be strong at layer 0 because it averages all subword embeddings outside the model, so layer-0 mean results are not evidence of internal transformer composition.
+
+Interpretation: E04b supports the whole-word-access account. The main decoder-only setup should remain last-token pooling, with first and mean pooling reported as controls. The next priority is E05 on full affixed forms.
+
+## 2026-05-03: `E05`
+
+Model: `Qwen/Qwen3-1.7B-Base`  
+Dataset: `data/productivity_dataset.json`  
+Input: full forms for real items; base forms for nonce items  
+Pooling: last token  
+Output folder: `results/E05`
+
+This run tests whether the probing signal survives when real Arabic forms include prefixes and suffixes.
+
+Summary:
+
+- Real template random split reaches 0.962, but the n-gram baseline is 1.000, so this split is surface-solvable.
+- Real-to-nonce template transfer improves from 0.710 in E03 to 0.800 in E05, against a 0.590 n-gram baseline.
+- Nonce-to-real template transfer reaches 0.807, but the n-gram baseline is high at 0.753.
+- Real root probing rises to 0.877, but this is not a clean abstract-root result because affixed variants make the random split easier.
+
+Interpretation: E05 is a useful affixed-form stress test, not a central morphology result. Affixes do not destroy the template signal, but stricter grouped splits are needed before making claims about affix-invariant morphology.
