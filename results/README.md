@@ -122,3 +122,23 @@ Summary:
 - Real root probing rises to 0.877, but this is not a clean abstract-root result because affixed variants make the random split easier.
 
 Interpretation: E05 is a useful affixed-form stress test, not a central morphology result. Affixes do not destroy the template signal, but stricter grouped splits are needed before making claims about affix-invariant morphology.
+
+## 2026-05-03: `E05b`
+
+Model: `Qwen/Qwen3-1.7B-Base`  
+Dataset: `data/productivity_dataset.json`  
+Input: full forms for real items; base forms for nonce items  
+Pooling: last token  
+Real split: family grouped by `(root, template, base_form)`  
+Output folder: `results/E05b`
+
+This run repeats the full-form stress test with grouped splitting for real template probing.
+
+Summary:
+
+- The grouped split has zero family overlap: 121 train groups, 31 test groups, 0 overlap.
+- Real template probing remains strong: 0.903 accuracy against a 0.667 n-gram baseline.
+- This corrects the E05 weakness, where real template random split had 0.962 accuracy but a 1.000 n-gram baseline.
+- `real_roots_random` is skipped because the data does not contain enough independent family groups per root label for a clean grouped root split.
+
+Interpretation: E05b should replace E05 as the main full-form evidence. Affixed real forms still expose template information after sibling leakage is removed. This is a stronger result than E05, though it still does not test affixed nonce forms.
