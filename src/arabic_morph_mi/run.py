@@ -18,7 +18,15 @@ from arabic_morph_mi.io import timestamp, write_json
 from arabic_morph_mi.model import encode_texts, load_model, tokenization_diagnostics
 from arabic_morph_mi.plot import plot_curves
 from arabic_morph_mi.probe import layer_probe
-from arabic_morph_mi.splits import heldout_root_split, heldout_template_split, one_per_label_test_split, random_split
+from arabic_morph_mi.splits import (
+    group_split_summary,
+    grouped_one_per_label_test_split,
+    grouped_random_split,
+    heldout_root_split,
+    heldout_template_split,
+    one_per_label_test_split,
+    random_split,
+)
 
 
 def parse_args() -> argparse.Namespace:
@@ -27,6 +35,12 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--model", default="Qwen/Qwen3-1.7B-Base")
     parser.add_argument("--surface", choices=["base", "full"], default="base")
     parser.add_argument("--pooling", choices=["last", "first", "mean"], default="last")
+    parser.add_argument(
+        "--real-split",
+        choices=["item", "family"],
+        default="item",
+        help="Use item-level real splits, or group real variants by root/template/base_form.",
+    )
     parser.add_argument("--run-id", help="Optional output folder name under --output-dir, e.g. E03.")
     parser.add_argument("--output-dir", default="results")
     parser.add_argument("--batch-size", type=int, default=4)
@@ -58,6 +72,7 @@ def run_one(
     hidden_by_text: dict[str, np.ndarray],
     control_seed: int,
     token_count_by_text: dict[str, int],
+    split_kind: str,
 ) -> dict:
     texts = [item.text for item in items]
     X = np.stack([hidden_by_text[text] for text in texts])
@@ -77,7 +92,26 @@ def run_one(
     result["n_items"] = len(items)
     result["train_size"] = int(len(train))
     result["test_size"] = int(len(test))
+    result["split_kind"] = split_kind
+    if split_kind == "family":
+        result["group_split"] = group_split_summary(items, train, test)
     return result
+
+
+def real_random_split(items: list[Item], y: list[int], args: argparse.Namespace) -> tuple[np.ndarray, np.ndarray, str]:
+    if args.real_split == "family":
+        train, test = grouped_random_split(items, y, args.test_size, args.seed)
+        return train, test, "family"
+    train, test = random_split(y, args.test_size, args.seed)
+    return train, test, "item"
+
+
+def real_root_split(items: list[Item], y: list[int], args: argparse.Namespace) -> tuple[np.ndarray, np.ndarray, str]:
+    if args.real_split == "family":
+        train, test = grouped_one_per_label_test_split(items, y, args.seed + 3)
+        return train, test, "family"
+    train, test = one_per_label_test_split(y, args.seed + 3)
+    return train, test, "item"
 
 
 def main() -> None:
@@ -89,32 +123,37 @@ def main() -> None:
     real_overlap, nonce_overlap = overlap_by_label(real, nonce)
 
     experiments = {}
+    skipped_experiments = {}
 
     labels, y = with_labels(real, "template")
-    train, test = random_split(y, args.test_size, args.seed)
-    experiments["real_templates_random"] = (real, labels, y, train, test)
+    train, test, split_kind = real_random_split(real, y, args)
+    experiments["real_templates_random"] = (real, labels, y, train, test, split_kind)
 
     labels, y = with_labels(nonce, "template")
     train, test = random_split(y, args.test_size, args.seed + 1)
-    experiments["nonce_templates_random"] = (nonce, labels, y, train, test)
+    experiments["nonce_templates_random"] = (nonce, labels, y, train, test, "item")
 
     train, test = heldout_root_split(nonce, y, args.test_size, args.seed + 2)
-    experiments["nonce_templates_heldout_roots"] = (nonce, labels, y, train, test)
+    experiments["nonce_templates_heldout_roots"] = (nonce, labels, y, train, test, "heldout_root")
 
-    experiments["train_real_test_nonce_overlap"] = explicit_split(real_overlap, nonce_overlap, "template")
-    experiments["train_nonce_test_real_overlap"] = explicit_split(nonce_overlap, real_overlap, "template")
+    experiments["train_real_test_nonce_overlap"] = (*explicit_split(real_overlap, nonce_overlap, "template"), "explicit")
+    experiments["train_nonce_test_real_overlap"] = (*explicit_split(nonce_overlap, real_overlap, "template"), "explicit")
 
     real_roots = keep_labels_with_min_count(real, "root", min_count=2)
     labels, y = with_labels(real_roots, "root")
-    train, test = one_per_label_test_split(y, args.seed + 3)
-    experiments["real_roots_random"] = (real_roots, labels, y, train, test)
+    try:
+        train, test, split_kind = real_root_split(real_roots, y, args)
+    except ValueError as exc:
+        skipped_experiments["real_roots_random"] = str(exc)
+    else:
+        experiments["real_roots_random"] = (real_roots, labels, y, train, test, split_kind)
 
     labels, y = with_labels(nonce, "root")
     train, test = random_split(y, args.test_size, args.seed + 4)
-    experiments["nonce_roots_random"] = (nonce, labels, y, train, test)
+    experiments["nonce_roots_random"] = (nonce, labels, y, train, test, "item")
 
     train, test = heldout_template_split(nonce, y, args.test_size, args.seed + 5)
-    experiments["nonce_roots_heldout_templates"] = (nonce, labels, y, train, test)
+    experiments["nonce_roots_heldout_templates"] = (nonce, labels, y, train, test, "heldout_template")
 
     texts = sorted({item.text for exp in experiments.values() for item in exp[0]})
     tokenizer, model, input_device = load_model(args.model, args.dtype)
@@ -145,8 +184,9 @@ def main() -> None:
             hidden_by_text,
             control_seed=args.seed + i,
             token_count_by_text=token_count_by_text,
+            split_kind=split_kind,
         )
-        for i, (name, (items, labels, y, train, test)) in enumerate(experiments.items())
+        for i, (name, (items, labels, y, train, test, split_kind)) in enumerate(experiments.items())
     }
 
     write_json(run_dir / "tokenization_diagnostics.json", tokenization)
@@ -157,7 +197,9 @@ def main() -> None:
             "model": args.model,
             "surface": args.surface,
             "pooling": args.pooling,
+            "real_split": args.real_split,
             "data": str(args.data),
+            "skipped_experiments": skipped_experiments,
             "tokenization_summary": {k: v for k, v in tokenization.items() if k != "items"},
             "representation_summary": {
                 "n_texts": representation["n_texts"],

@@ -10,6 +10,8 @@ Use this table as the source of truth for what has been run, what changed, and w
 | E04a | done | 2026-05-03 | `Qwen/Qwen3-1.7B-Base` | `base` | First-subword pooling ablation | `MODEL=Qwen/Qwen3-1.7B-Base SURFACE=base POOLING=first RUN_ID=E04a BATCH_SIZE=4 bash scripts/colab_run.sh` | [interpretation](results/E04a/interpretation.md) |
 | E04b | done | 2026-05-03 | `Qwen/Qwen3-1.7B-Base` | `base` | Mean-pooling ablation | `MODEL=Qwen/Qwen3-1.7B-Base SURFACE=base POOLING=mean RUN_ID=E04b BATCH_SIZE=4 bash scripts/colab_run.sh` | [interpretation](results/E04b/interpretation.md) |
 | E05 | done | 2026-05-03 | `Qwen/Qwen3-1.7B-Base` | `full` | Affixed-form stress test | `MODEL=Qwen/Qwen3-1.7B-Base SURFACE=full POOLING=last RUN_ID=E05 BATCH_SIZE=4 bash scripts/colab_run.sh` | [interpretation](results/E05/interpretation.md) |
+| E05b | code ready | TBD | `Qwen/Qwen3-1.7B-Base` | `full` | Grouped full-form split; prevent affixed sibling leakage | `MODEL=Qwen/Qwen3-1.7B-Base SURFACE=full POOLING=last REAL_SPLIT=family RUN_ID=E05b BATCH_SIZE=4 bash scripts/colab_run.sh` | TBD |
+| E05c | todo | TBD | `Qwen/Qwen3-1.7B-Base` | `full` | Nonce affixed-form augmentation/test | not implemented yet; nonce affixed forms are not in current data | TBD |
 | E06 | code ready | TBD | `Qwen/Qwen3-8B` | `base` | Larger Qwen comparison | `MODEL=Qwen/Qwen3-8B SURFACE=base POOLING=last RUN_ID=E06 BATCH_SIZE=1 bash scripts/colab_run.sh` | TBD |
 | E07 | code ready | TBD | `QCRI/Fanar-1-9B` | `base` | Arabic-centric Fanar comparison | `MODEL=QCRI/Fanar-1-9B SURFACE=base POOLING=last RUN_ID=E07 BATCH_SIZE=1 bash scripts/colab_run.sh` | TBD |
 | E08 | code ready | TBD | `humain-ai/ALLaM-7B-Instruct-preview` | `base` | Arabic-centric ALLaM comparison | `MODEL=humain-ai/ALLaM-7B-Instruct-preview SURFACE=base POOLING=last RUN_ID=E08 BATCH_SIZE=1 bash scripts/colab_run.sh` | TBD |
@@ -18,6 +20,6 @@ Use this table as the source of truth for what has been run, what changed, and w
 
 ## Current Reading
 
-The current strongest result is E02's template probing: Qwen3-1.7B recovers template labels above chance, control, and n-gram baselines, especially for nonce held-out roots. Root probes are highly accurate but are mostly surface-solvable in the nonce data because the root consonants remain visible.
+The current strongest result is E03's template probing with last-token pooling: Qwen3-1.7B recovers template labels above chance, control, and n-gram baselines, especially for nonce held-out roots. Root probes are highly accurate but are mostly surface-solvable in the nonce data because the root consonants remain visible.
 
-The immediate next priority is E03/E04, not a larger model run. We need tokenization diagnostics and pooling ablations to understand whether the layer-0 weakness and early-layer spike are caused by final-subword extraction in a causal decoder.
+The immediate next priority is E05b, not a larger model run. E05 showed that full-form real random splits can be surface-solvable and vulnerable to affixed sibling leakage. E05b should add grouped splitting before we scale the same setup to larger models. E05c is useful only if we decide to create and verify nonce affixed forms.

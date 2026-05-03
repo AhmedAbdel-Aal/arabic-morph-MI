@@ -27,6 +27,10 @@ def normalize_root(root: str) -> str:
     return root.replace(".", "").replace(" ", "")
 
 
+def family_key(item: Item) -> str:
+    return "\t".join([item.root, item.template, item.base_form])
+
+
 def load_productivity_dataset(path: str | Path) -> dict:
     with open(path, "r", encoding="utf-8") as f:
         return json.load(f)

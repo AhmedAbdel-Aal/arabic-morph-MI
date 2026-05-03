@@ -17,6 +17,7 @@ Run:
   --model Qwen/Qwen3-1.7B-Base \
   --surface base \
   --pooling last \
+  --real-split item \
   --run-id E03
 ```
 
@@ -67,6 +68,7 @@ Useful ablation runs:
 !MODEL=Qwen/Qwen3-1.7B-Base SURFACE=base POOLING=first RUN_ID=E04a BATCH_SIZE=4 bash scripts/colab_run.sh
 !MODEL=Qwen/Qwen3-1.7B-Base SURFACE=base POOLING=mean RUN_ID=E04b BATCH_SIZE=4 bash scripts/colab_run.sh
 !MODEL=Qwen/Qwen3-1.7B-Base SURFACE=full POOLING=last RUN_ID=E05 BATCH_SIZE=4 bash scripts/colab_run.sh
+!MODEL=Qwen/Qwen3-1.7B-Base SURFACE=full POOLING=last REAL_SPLIT=family RUN_ID=E05b BATCH_SIZE=4 bash scripts/colab_run.sh
 ```
 
 Each run writes `tokenization_diagnostics.json`, `representation_diagnostics.json`, `results.json`, and `curves.png`.
