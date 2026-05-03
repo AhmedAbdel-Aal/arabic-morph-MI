@@ -142,3 +142,43 @@ Summary:
 - `real_roots_random` is skipped because the data does not contain enough independent family groups per root label for a clean grouped root split.
 
 Interpretation: E05b should replace E05 as the main full-form evidence. Affixed real forms still expose template information after sibling leakage is removed. This is a stronger result than E05, though it still does not test affixed nonce forms.
+
+## 2026-05-03: `E06`
+
+Model: `Qwen/Qwen3-8B`  
+Dataset: `data/productivity_dataset.json`  
+Input: isolated base forms  
+Pooling: last token  
+Output folder: `results/E06`
+
+This run is the larger-Qwen base-form comparison against E03.
+
+Summary:
+
+- Qwen3-8B improves over Qwen3-1.7B on base-form template probing.
+- Real template random split rises from 0.808 to 0.962.
+- Real-to-nonce transfer rises from 0.710 to 0.870.
+- Nonce-to-real transfer rises from 0.880 to 0.980.
+- Nonce held-out-root templates remain saturated at 1.000.
+
+Interpretation: E06 supports a positive scale effect within Qwen. The improvement is clearest in transfer, which is more important than already-saturated nonce tasks.
+
+## 2026-05-03: `E06b`
+
+Model: `Qwen/Qwen3-8B`  
+Dataset: `data/productivity_dataset.json`  
+Input: full forms for real items; base forms for nonce items  
+Pooling: last token  
+Real split: family grouped by `(root, template, base_form)`  
+Output folder: `results/E06b`
+
+This run is the larger-Qwen full-form family-split comparison against E05b.
+
+Summary:
+
+- Real template family split reaches 0.931 against a 0.667 n-gram baseline.
+- Real-to-nonce transfer reaches 0.890.
+- Nonce-to-real transfer reaches 0.907.
+- The grouped split remains clean: 121 train groups, 31 test groups, 0 overlap.
+
+Interpretation: E06b strengthens the full-form robustness result. Qwen3-8B recovers template information from affixed real forms under grouped splitting, and improves over Qwen3-1.7B mainly in transfer.
