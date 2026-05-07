@@ -1,8 +1,10 @@
 # Cross-Study Interpretation
 
 Date: 2026-05-03  
-Current model studied: `Qwen/Qwen3-1.7B-Base`  
+Models studied: `Qwen/Qwen3-1.7B-Base`, `Qwen/Qwen3-8B`, `QCRI/Fanar-1-9B`, `humain-ai/ALLaM-7B-Instruct-preview`  
 Dataset: Alakeel productivity dataset copied to `data/productivity_dataset.json`
+
+Updated cross-model synthesis: [cross_model_interpretation.md](cross_model_interpretation.md)
 
 ## Executive Lab Judgment
 

@@ -2,6 +2,23 @@
 
 Cross-study synthesis: [cross_study_interpretation.md](cross_study_interpretation.md)
 
+Cross-model synthesis: [cross_model_interpretation.md](cross_model_interpretation.md)
+
+Generated summary tables and plots: [summary/cross_model_summary.md](summary/cross_model_summary.md)
+
+## 2026-05-03: `summary`
+
+Output folder: `results/summary`
+
+This folder contains generated cross-run artifacts built from the saved result files:
+
+- `cross_model_summary.md`: compact paper-facing summary.
+- `probe_metrics.csv`: one row per probe per run.
+- `token_count_accuracy.csv`: peak-layer accuracy broken down by token count.
+- `tokenization_summary.csv`: tokenizer diagnostics per run.
+- `geometry_summary.csv`: representation geometry diagnostics per run.
+- `*.png`: cross-model, transfer, n-gram gap, selectivity, tokenization, geometry, and pooling-ablation plots.
+
 ## 2026-05-02: `E01_Qwen3-1.7B-Base_base_template`
 
 Model: `Qwen/Qwen3-1.7B-Base`  
@@ -182,3 +199,81 @@ Summary:
 - The grouped split remains clean: 121 train groups, 31 test groups, 0 overlap.
 
 Interpretation: E06b strengthens the full-form robustness result. Qwen3-8B recovers template information from affixed real forms under grouped splitting, and improves over Qwen3-1.7B mainly in transfer.
+
+## 2026-05-03: `E07`
+
+Model: `QCRI/Fanar-1-9B`  
+Dataset: `data/productivity_dataset.json`  
+Input: isolated base forms  
+Pooling: last token  
+Output folder: `results/E07`
+
+This run is the Fanar base-form comparison.
+
+Summary:
+
+- Fanar recovers template information strongly: nonce held-out roots reach 1.000.
+- Real-to-nonce transfer reaches 0.820.
+- Nonce-to-real transfer reaches 0.940.
+- Fanar has cleaner representation geometry than Qwen and ALLaM, with no severe one-component collapse.
+
+Interpretation: Fanar supports the cross-model claim. It is not as strong as Qwen3-8B on transfer, but it is clearly stronger than ALLaM and has much cleaner geometry.
+
+## 2026-05-03: `E07b`
+
+Model: `QCRI/Fanar-1-9B`  
+Dataset: `data/productivity_dataset.json`  
+Input: full forms for real items; base forms for nonce items  
+Pooling: last token  
+Real split: family grouped by `(root, template, base_form)`  
+Output folder: `results/E07b`
+
+This run is the Fanar full-form family-split comparison.
+
+Summary:
+
+- Real template family split reaches 0.944 against a 0.667 n-gram baseline.
+- This is the best full/family real-template result so far.
+- Real-to-nonce transfer is 0.770, lower than Qwen3-8B.
+- Nonce-to-real transfer is 0.860.
+
+Interpretation: Fanar is strongest on affixed real full-form classification, while Qwen3-8B remains stronger on real/nonce transfer.
+
+## 2026-05-03: `E08`
+
+Model: `humain-ai/ALLaM-7B-Instruct-preview`  
+Dataset: `data/productivity_dataset.json`  
+Input: isolated base forms  
+Pooling: last token  
+Output folder: `results/E08`
+
+This run is the ALLaM base-form comparison.
+
+Summary:
+
+- ALLaM reaches 1.000 on nonce held-out-root templates.
+- Real template random split is weaker: 0.692 against a 0.654 n-gram baseline.
+- Real-to-nonce transfer is 0.630.
+- Nonce-to-real transfer is 0.580, below the 0.780 n-gram baseline.
+
+Interpretation: ALLaM is strong on controlled nonce template probes but weak on real/nonce transfer. It is a useful counterexample to the simple idea that Arabic-centric models are always stronger.
+
+## 2026-05-03: `E08b`
+
+Model: `humain-ai/ALLaM-7B-Instruct-preview`  
+Dataset: `data/productivity_dataset.json`  
+Input: full forms for real items; base forms for nonce items  
+Pooling: last token  
+Real split: family grouped by `(root, template, base_form)`  
+Output folder: `results/E08b`
+
+This run is the ALLaM full-form family-split comparison.
+
+Summary:
+
+- Real template family split reaches 0.806 against a 0.667 n-gram baseline.
+- Real-to-nonce transfer reaches 0.700.
+- Nonce-to-real transfer is 0.587, below the 0.753 n-gram baseline.
+- ALLaM tokenizes Arabic compactly but still underperforms Fanar and Qwen3-8B.
+
+Interpretation: ALLaM exposes some full-form template signal, but remains weak on transfer. The cross-model story is model-specific variation, not a uniform Arabic-centric advantage.

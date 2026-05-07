@@ -1,0 +1,14 @@
+experiment,main_set,model,model_short,surface,pooling,real_split,n_texts,min_tokens,max_tokens,mean_tokens,median_tokens,one_token_count,one_token_fraction,token_count_distribution
+E01_Qwen3-1.7B-Base_base_template,no,Qwen/Qwen3-1.7B-Base,Qwen3-1.7B,base,,item,0,,,,,0,,{}
+E02_Qwen3-1.7B-Base_base_template_root,no,Qwen/Qwen3-1.7B-Base,Qwen3-1.7B,base,,item,0,,,,,0,,{}
+E03,yes,Qwen/Qwen3-1.7B-Base,Qwen3-1.7B,base,last,item,230,1,4,2.5217391304347827,3.0,17,0.07391304347826087,"{""1"": 17, ""2"": 88, ""3"": 113, ""4"": 12}"
+E04a,no,Qwen/Qwen3-1.7B-Base,Qwen3-1.7B,base,first,item,230,1,4,2.5217391304347827,3.0,17,0.07391304347826087,"{""1"": 17, ""2"": 88, ""3"": 113, ""4"": 12}"
+E04b,no,Qwen/Qwen3-1.7B-Base,Qwen3-1.7B,base,mean,item,230,1,4,2.5217391304347827,3.0,17,0.07391304347826087,"{""1"": 17, ""2"": 88, ""3"": 113, ""4"": 12}"
+E05,no,Qwen/Qwen3-1.7B-Base,Qwen3-1.7B,full,last,item,490,1,5,2.8653061224489798,3.0,18,0.036734693877551024,"{""1"": 18, ""2"": 125, ""3"": 257, ""4"": 85, ""5"": 5}"
+E05b,yes,Qwen/Qwen3-1.7B-Base,Qwen3-1.7B,full,last,family,490,1,5,2.8653061224489798,3.0,18,0.036734693877551024,"{""1"": 18, ""2"": 125, ""3"": 257, ""4"": 85, ""5"": 5}"
+E06,yes,Qwen/Qwen3-8B,Qwen3-8B,base,last,item,230,1,4,2.5217391304347827,3.0,17,0.07391304347826087,"{""1"": 17, ""2"": 88, ""3"": 113, ""4"": 12}"
+E06b,yes,Qwen/Qwen3-8B,Qwen3-8B,full,last,family,490,1,5,2.8653061224489798,3.0,18,0.036734693877551024,"{""1"": 18, ""2"": 125, ""3"": 257, ""4"": 85, ""5"": 5}"
+E07,yes,QCRI/Fanar-1-9B,Fanar-1-9B,base,last,item,230,2,5,3.639130434782609,4.0,0,0.0,"{""2"": 6, ""3"": 89, ""4"": 117, ""5"": 18}"
+E07b,yes,QCRI/Fanar-1-9B,Fanar-1-9B,full,last,family,490,2,6,3.8918367346938774,4.0,0,0.0,"{""2"": 6, ""3"": 125, ""4"": 280, ""5"": 74, ""6"": 5}"
+E08,yes,humain-ai/ALLaM-7B-Instruct-preview,ALLaM-7B,base,last,item,230,1,4,1.8956521739130434,2.0,71,0.30869565217391304,"{""1"": 71, ""2"": 113, ""3"": 45, ""4"": 1}"
+E08b,yes,humain-ai/ALLaM-7B-Instruct-preview,ALLaM-7B,full,last,family,490,1,4,1.9244897959183673,2.0,144,0.2938775510204082,"{""1"": 144, ""2"": 240, ""3"": 105, ""4"": 1}"

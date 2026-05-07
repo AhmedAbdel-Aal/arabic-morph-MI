@@ -1,0 +1,256 @@
+experiment,model_short,surface,pooling,real_split,probe,probe_label,n_tokens,n,accuracy
+E03,Qwen3-1.7B,base,last,item,real_templates_random,real templates,1,4,1.0
+E03,Qwen3-1.7B,base,last,item,real_templates_random,real templates,2,15,0.7333333333333333
+E03,Qwen3-1.7B,base,last,item,real_templates_random,real templates,3,7,0.8571428571428571
+E03,Qwen3-1.7B,base,last,item,nonce_templates_random,nonce templates,2,3,1.0
+E03,Qwen3-1.7B,base,last,item,nonce_templates_random,nonce templates,3,15,0.9333333333333333
+E03,Qwen3-1.7B,base,last,item,nonce_templates_random,nonce templates,4,2,1.0
+E03,Qwen3-1.7B,base,last,item,nonce_templates_heldout_roots,nonce held-out roots,2,2,1.0
+E03,Qwen3-1.7B,base,last,item,nonce_templates_heldout_roots,nonce held-out roots,3,14,1.0
+E03,Qwen3-1.7B,base,last,item,nonce_templates_heldout_roots,nonce held-out roots,4,4,1.0
+E03,Qwen3-1.7B,base,last,item,train_real_test_nonce_overlap,real -> nonce,2,22,0.5454545454545454
+E03,Qwen3-1.7B,base,last,item,train_real_test_nonce_overlap,real -> nonce,3,66,0.7272727272727273
+E03,Qwen3-1.7B,base,last,item,train_real_test_nonce_overlap,real -> nonce,4,12,0.9166666666666666
+E03,Qwen3-1.7B,base,last,item,train_nonce_test_real_overlap,nonce -> real,1,11,0.45454545454545453
+E03,Qwen3-1.7B,base,last,item,train_nonce_test_real_overlap,nonce -> real,2,21,1.0
+E03,Qwen3-1.7B,base,last,item,train_nonce_test_real_overlap,nonce -> real,3,18,1.0
+E03,Qwen3-1.7B,base,last,item,real_roots_random,real roots,1,2,0.0
+E03,Qwen3-1.7B,base,last,item,real_roots_random,real roots,2,8,0.375
+E03,Qwen3-1.7B,base,last,item,real_roots_random,real roots,3,11,0.7272727272727273
+E03,Qwen3-1.7B,base,last,item,nonce_roots_random,nonce roots,2,7,1.0
+E03,Qwen3-1.7B,base,last,item,nonce_roots_random,nonce roots,3,11,1.0
+E03,Qwen3-1.7B,base,last,item,nonce_roots_random,nonce roots,4,2,1.0
+E03,Qwen3-1.7B,base,last,item,nonce_roots_heldout_templates,nonce roots held-out templates,2,1,1.0
+E03,Qwen3-1.7B,base,last,item,nonce_roots_heldout_templates,nonce roots held-out templates,3,12,1.0
+E03,Qwen3-1.7B,base,last,item,nonce_roots_heldout_templates,nonce roots held-out templates,4,7,1.0
+E04a,Qwen3-1.7B,base,first,item,real_templates_random,real templates,1,4,0.5
+E04a,Qwen3-1.7B,base,first,item,real_templates_random,real templates,2,15,0.3333333333333333
+E04a,Qwen3-1.7B,base,first,item,real_templates_random,real templates,3,7,0.42857142857142855
+E04a,Qwen3-1.7B,base,first,item,nonce_templates_random,nonce templates,2,3,0.3333333333333333
+E04a,Qwen3-1.7B,base,first,item,nonce_templates_random,nonce templates,3,15,0.3333333333333333
+E04a,Qwen3-1.7B,base,first,item,nonce_templates_random,nonce templates,4,2,1.0
+E04a,Qwen3-1.7B,base,first,item,nonce_templates_heldout_roots,nonce held-out roots,2,2,0.5
+E04a,Qwen3-1.7B,base,first,item,nonce_templates_heldout_roots,nonce held-out roots,3,14,0.5714285714285714
+E04a,Qwen3-1.7B,base,first,item,nonce_templates_heldout_roots,nonce held-out roots,4,4,1.0
+E04a,Qwen3-1.7B,base,first,item,train_real_test_nonce_overlap,real -> nonce,2,22,0.36363636363636365
+E04a,Qwen3-1.7B,base,first,item,train_real_test_nonce_overlap,real -> nonce,3,66,0.5757575757575758
+E04a,Qwen3-1.7B,base,first,item,train_real_test_nonce_overlap,real -> nonce,4,12,1.0
+E04a,Qwen3-1.7B,base,first,item,train_nonce_test_real_overlap,nonce -> real,1,11,0.36363636363636365
+E04a,Qwen3-1.7B,base,first,item,train_nonce_test_real_overlap,nonce -> real,2,21,0.7619047619047619
+E04a,Qwen3-1.7B,base,first,item,train_nonce_test_real_overlap,nonce -> real,3,18,0.8888888888888888
+E04a,Qwen3-1.7B,base,first,item,real_roots_random,real roots,1,2,0.5
+E04a,Qwen3-1.7B,base,first,item,real_roots_random,real roots,2,8,0.5
+E04a,Qwen3-1.7B,base,first,item,real_roots_random,real roots,3,11,0.45454545454545453
+E04a,Qwen3-1.7B,base,first,item,nonce_roots_random,nonce roots,2,7,0.7142857142857143
+E04a,Qwen3-1.7B,base,first,item,nonce_roots_random,nonce roots,3,11,0.9090909090909091
+E04a,Qwen3-1.7B,base,first,item,nonce_roots_random,nonce roots,4,2,0.0
+E04a,Qwen3-1.7B,base,first,item,nonce_roots_heldout_templates,nonce roots held-out templates,2,1,1.0
+E04a,Qwen3-1.7B,base,first,item,nonce_roots_heldout_templates,nonce roots held-out templates,3,12,0.08333333333333333
+E04a,Qwen3-1.7B,base,first,item,nonce_roots_heldout_templates,nonce roots held-out templates,4,7,0.0
+E04b,Qwen3-1.7B,base,mean,item,real_templates_random,real templates,1,4,0.75
+E04b,Qwen3-1.7B,base,mean,item,real_templates_random,real templates,2,15,0.6
+E04b,Qwen3-1.7B,base,mean,item,real_templates_random,real templates,3,7,0.8571428571428571
+E04b,Qwen3-1.7B,base,mean,item,nonce_templates_random,nonce templates,2,3,1.0
+E04b,Qwen3-1.7B,base,mean,item,nonce_templates_random,nonce templates,3,15,0.8
+E04b,Qwen3-1.7B,base,mean,item,nonce_templates_random,nonce templates,4,2,1.0
+E04b,Qwen3-1.7B,base,mean,item,nonce_templates_heldout_roots,nonce held-out roots,2,2,1.0
+E04b,Qwen3-1.7B,base,mean,item,nonce_templates_heldout_roots,nonce held-out roots,3,14,0.9285714285714286
+E04b,Qwen3-1.7B,base,mean,item,nonce_templates_heldout_roots,nonce held-out roots,4,4,1.0
+E04b,Qwen3-1.7B,base,mean,item,train_real_test_nonce_overlap,real -> nonce,2,22,0.36363636363636365
+E04b,Qwen3-1.7B,base,mean,item,train_real_test_nonce_overlap,real -> nonce,3,66,0.6666666666666666
+E04b,Qwen3-1.7B,base,mean,item,train_real_test_nonce_overlap,real -> nonce,4,12,1.0
+E04b,Qwen3-1.7B,base,mean,item,train_nonce_test_real_overlap,nonce -> real,1,11,0.6363636363636364
+E04b,Qwen3-1.7B,base,mean,item,train_nonce_test_real_overlap,nonce -> real,2,21,0.8095238095238095
+E04b,Qwen3-1.7B,base,mean,item,train_nonce_test_real_overlap,nonce -> real,3,18,1.0
+E04b,Qwen3-1.7B,base,mean,item,real_roots_random,real roots,1,2,0.5
+E04b,Qwen3-1.7B,base,mean,item,real_roots_random,real roots,2,8,0.125
+E04b,Qwen3-1.7B,base,mean,item,real_roots_random,real roots,3,11,0.6363636363636364
+E04b,Qwen3-1.7B,base,mean,item,nonce_roots_random,nonce roots,2,7,1.0
+E04b,Qwen3-1.7B,base,mean,item,nonce_roots_random,nonce roots,3,11,1.0
+E04b,Qwen3-1.7B,base,mean,item,nonce_roots_random,nonce roots,4,2,1.0
+E04b,Qwen3-1.7B,base,mean,item,nonce_roots_heldout_templates,nonce roots held-out templates,2,1,1.0
+E04b,Qwen3-1.7B,base,mean,item,nonce_roots_heldout_templates,nonce roots held-out templates,3,12,0.9166666666666666
+E04b,Qwen3-1.7B,base,mean,item,nonce_roots_heldout_templates,nonce roots held-out templates,4,7,1.0
+E05,Qwen3-1.7B,full,last,item,real_templates_random,real templates,1,3,0.6666666666666666
+E05,Qwen3-1.7B,full,last,item,real_templates_random,real templates,2,20,1.0
+E05,Qwen3-1.7B,full,last,item,real_templates_random,real templates,3,41,0.9512195121951219
+E05,Qwen3-1.7B,full,last,item,real_templates_random,real templates,4,13,1.0
+E05,Qwen3-1.7B,full,last,item,real_templates_random,real templates,5,1,1.0
+E05,Qwen3-1.7B,full,last,item,nonce_templates_random,nonce templates,2,3,1.0
+E05,Qwen3-1.7B,full,last,item,nonce_templates_random,nonce templates,3,15,0.9333333333333333
+E05,Qwen3-1.7B,full,last,item,nonce_templates_random,nonce templates,4,2,1.0
+E05,Qwen3-1.7B,full,last,item,nonce_templates_heldout_roots,nonce held-out roots,2,2,1.0
+E05,Qwen3-1.7B,full,last,item,nonce_templates_heldout_roots,nonce held-out roots,3,14,1.0
+E05,Qwen3-1.7B,full,last,item,nonce_templates_heldout_roots,nonce held-out roots,4,4,1.0
+E05,Qwen3-1.7B,full,last,item,train_real_test_nonce_overlap,real -> nonce,2,22,0.7272727272727273
+E05,Qwen3-1.7B,full,last,item,train_real_test_nonce_overlap,real -> nonce,3,66,0.7878787878787878
+E05,Qwen3-1.7B,full,last,item,train_real_test_nonce_overlap,real -> nonce,4,12,1.0
+E05,Qwen3-1.7B,full,last,item,train_nonce_test_real_overlap,nonce -> real,1,12,0.4166666666666667
+E05,Qwen3-1.7B,full,last,item,train_nonce_test_real_overlap,nonce -> real,2,39,0.9230769230769231
+E05,Qwen3-1.7B,full,last,item,train_nonce_test_real_overlap,nonce -> real,3,74,0.8108108108108109
+E05,Qwen3-1.7B,full,last,item,train_nonce_test_real_overlap,nonce -> real,4,24,0.7916666666666666
+E05,Qwen3-1.7B,full,last,item,train_nonce_test_real_overlap,nonce -> real,5,1,1.0
+E05,Qwen3-1.7B,full,last,item,real_roots_random,real roots,1,4,0.0
+E05,Qwen3-1.7B,full,last,item,real_roots_random,real roots,2,21,1.0
+E05,Qwen3-1.7B,full,last,item,real_roots_random,real roots,3,59,0.9322033898305084
+E05,Qwen3-1.7B,full,last,item,real_roots_random,real roots,4,22,0.7727272727272727
+E05,Qwen3-1.7B,full,last,item,nonce_roots_random,nonce roots,2,7,1.0
+E05,Qwen3-1.7B,full,last,item,nonce_roots_random,nonce roots,3,11,1.0
+E05,Qwen3-1.7B,full,last,item,nonce_roots_random,nonce roots,4,2,1.0
+E05,Qwen3-1.7B,full,last,item,nonce_roots_heldout_templates,nonce roots held-out templates,2,1,1.0
+E05,Qwen3-1.7B,full,last,item,nonce_roots_heldout_templates,nonce roots held-out templates,3,12,1.0
+E05,Qwen3-1.7B,full,last,item,nonce_roots_heldout_templates,nonce roots held-out templates,4,7,1.0
+E05b,Qwen3-1.7B,full,last,family,real_templates_random,real templates,1,2,1.0
+E05b,Qwen3-1.7B,full,last,family,real_templates_random,real templates,2,18,1.0
+E05b,Qwen3-1.7B,full,last,family,real_templates_random,real templates,3,42,0.8571428571428571
+E05b,Qwen3-1.7B,full,last,family,real_templates_random,real templates,4,9,0.8888888888888888
+E05b,Qwen3-1.7B,full,last,family,real_templates_random,real templates,5,1,1.0
+E05b,Qwen3-1.7B,full,last,family,nonce_templates_random,nonce templates,2,3,1.0
+E05b,Qwen3-1.7B,full,last,family,nonce_templates_random,nonce templates,3,15,0.9333333333333333
+E05b,Qwen3-1.7B,full,last,family,nonce_templates_random,nonce templates,4,2,1.0
+E05b,Qwen3-1.7B,full,last,family,nonce_templates_heldout_roots,nonce held-out roots,2,2,1.0
+E05b,Qwen3-1.7B,full,last,family,nonce_templates_heldout_roots,nonce held-out roots,3,14,1.0
+E05b,Qwen3-1.7B,full,last,family,nonce_templates_heldout_roots,nonce held-out roots,4,4,1.0
+E05b,Qwen3-1.7B,full,last,family,train_real_test_nonce_overlap,real -> nonce,2,22,0.7272727272727273
+E05b,Qwen3-1.7B,full,last,family,train_real_test_nonce_overlap,real -> nonce,3,66,0.7878787878787878
+E05b,Qwen3-1.7B,full,last,family,train_real_test_nonce_overlap,real -> nonce,4,12,1.0
+E05b,Qwen3-1.7B,full,last,family,train_nonce_test_real_overlap,nonce -> real,1,12,0.4166666666666667
+E05b,Qwen3-1.7B,full,last,family,train_nonce_test_real_overlap,nonce -> real,2,39,0.9230769230769231
+E05b,Qwen3-1.7B,full,last,family,train_nonce_test_real_overlap,nonce -> real,3,74,0.8108108108108109
+E05b,Qwen3-1.7B,full,last,family,train_nonce_test_real_overlap,nonce -> real,4,24,0.7916666666666666
+E05b,Qwen3-1.7B,full,last,family,train_nonce_test_real_overlap,nonce -> real,5,1,1.0
+E05b,Qwen3-1.7B,full,last,family,nonce_roots_random,nonce roots,2,7,1.0
+E05b,Qwen3-1.7B,full,last,family,nonce_roots_random,nonce roots,3,11,1.0
+E05b,Qwen3-1.7B,full,last,family,nonce_roots_random,nonce roots,4,2,1.0
+E05b,Qwen3-1.7B,full,last,family,nonce_roots_heldout_templates,nonce roots held-out templates,2,1,1.0
+E05b,Qwen3-1.7B,full,last,family,nonce_roots_heldout_templates,nonce roots held-out templates,3,12,1.0
+E05b,Qwen3-1.7B,full,last,family,nonce_roots_heldout_templates,nonce roots held-out templates,4,7,1.0
+E06,Qwen3-8B,base,last,item,real_templates_random,real templates,1,4,0.75
+E06,Qwen3-8B,base,last,item,real_templates_random,real templates,2,15,1.0
+E06,Qwen3-8B,base,last,item,real_templates_random,real templates,3,7,1.0
+E06,Qwen3-8B,base,last,item,nonce_templates_random,nonce templates,2,3,1.0
+E06,Qwen3-8B,base,last,item,nonce_templates_random,nonce templates,3,15,1.0
+E06,Qwen3-8B,base,last,item,nonce_templates_random,nonce templates,4,2,1.0
+E06,Qwen3-8B,base,last,item,nonce_templates_heldout_roots,nonce held-out roots,2,2,1.0
+E06,Qwen3-8B,base,last,item,nonce_templates_heldout_roots,nonce held-out roots,3,14,1.0
+E06,Qwen3-8B,base,last,item,nonce_templates_heldout_roots,nonce held-out roots,4,4,1.0
+E06,Qwen3-8B,base,last,item,train_real_test_nonce_overlap,real -> nonce,2,22,0.8636363636363636
+E06,Qwen3-8B,base,last,item,train_real_test_nonce_overlap,real -> nonce,3,66,0.8484848484848485
+E06,Qwen3-8B,base,last,item,train_real_test_nonce_overlap,real -> nonce,4,12,1.0
+E06,Qwen3-8B,base,last,item,train_nonce_test_real_overlap,nonce -> real,1,11,1.0
+E06,Qwen3-8B,base,last,item,train_nonce_test_real_overlap,nonce -> real,2,21,0.9523809523809523
+E06,Qwen3-8B,base,last,item,train_nonce_test_real_overlap,nonce -> real,3,18,1.0
+E06,Qwen3-8B,base,last,item,real_roots_random,real roots,1,2,0.0
+E06,Qwen3-8B,base,last,item,real_roots_random,real roots,2,8,0.5
+E06,Qwen3-8B,base,last,item,real_roots_random,real roots,3,11,0.8181818181818182
+E06,Qwen3-8B,base,last,item,nonce_roots_random,nonce roots,2,7,1.0
+E06,Qwen3-8B,base,last,item,nonce_roots_random,nonce roots,3,11,1.0
+E06,Qwen3-8B,base,last,item,nonce_roots_random,nonce roots,4,2,1.0
+E06,Qwen3-8B,base,last,item,nonce_roots_heldout_templates,nonce roots held-out templates,2,1,1.0
+E06,Qwen3-8B,base,last,item,nonce_roots_heldout_templates,nonce roots held-out templates,3,12,1.0
+E06,Qwen3-8B,base,last,item,nonce_roots_heldout_templates,nonce roots held-out templates,4,7,1.0
+E06b,Qwen3-8B,full,last,family,real_templates_random,real templates,1,2,0.5
+E06b,Qwen3-8B,full,last,family,real_templates_random,real templates,2,18,0.9444444444444444
+E06b,Qwen3-8B,full,last,family,real_templates_random,real templates,3,42,0.9285714285714286
+E06b,Qwen3-8B,full,last,family,real_templates_random,real templates,4,9,1.0
+E06b,Qwen3-8B,full,last,family,real_templates_random,real templates,5,1,1.0
+E06b,Qwen3-8B,full,last,family,nonce_templates_random,nonce templates,2,3,1.0
+E06b,Qwen3-8B,full,last,family,nonce_templates_random,nonce templates,3,15,1.0
+E06b,Qwen3-8B,full,last,family,nonce_templates_random,nonce templates,4,2,1.0
+E06b,Qwen3-8B,full,last,family,nonce_templates_heldout_roots,nonce held-out roots,2,2,1.0
+E06b,Qwen3-8B,full,last,family,nonce_templates_heldout_roots,nonce held-out roots,3,14,1.0
+E06b,Qwen3-8B,full,last,family,nonce_templates_heldout_roots,nonce held-out roots,4,4,1.0
+E06b,Qwen3-8B,full,last,family,train_real_test_nonce_overlap,real -> nonce,2,22,0.8636363636363636
+E06b,Qwen3-8B,full,last,family,train_real_test_nonce_overlap,real -> nonce,3,66,0.8787878787878788
+E06b,Qwen3-8B,full,last,family,train_real_test_nonce_overlap,real -> nonce,4,12,1.0
+E06b,Qwen3-8B,full,last,family,train_nonce_test_real_overlap,nonce -> real,1,12,0.75
+E06b,Qwen3-8B,full,last,family,train_nonce_test_real_overlap,nonce -> real,2,39,0.8974358974358975
+E06b,Qwen3-8B,full,last,family,train_nonce_test_real_overlap,nonce -> real,3,74,0.918918918918919
+E06b,Qwen3-8B,full,last,family,train_nonce_test_real_overlap,nonce -> real,4,24,0.9583333333333334
+E06b,Qwen3-8B,full,last,family,train_nonce_test_real_overlap,nonce -> real,5,1,1.0
+E06b,Qwen3-8B,full,last,family,nonce_roots_random,nonce roots,2,7,1.0
+E06b,Qwen3-8B,full,last,family,nonce_roots_random,nonce roots,3,11,1.0
+E06b,Qwen3-8B,full,last,family,nonce_roots_random,nonce roots,4,2,1.0
+E06b,Qwen3-8B,full,last,family,nonce_roots_heldout_templates,nonce roots held-out templates,2,1,1.0
+E06b,Qwen3-8B,full,last,family,nonce_roots_heldout_templates,nonce roots held-out templates,3,12,1.0
+E06b,Qwen3-8B,full,last,family,nonce_roots_heldout_templates,nonce roots held-out templates,4,7,1.0
+E07,Fanar-1-9B,base,last,item,real_templates_random,real templates,2,1,0.0
+E07,Fanar-1-9B,base,last,item,real_templates_random,real templates,3,18,0.8888888888888888
+E07,Fanar-1-9B,base,last,item,real_templates_random,real templates,4,7,1.0
+E07,Fanar-1-9B,base,last,item,nonce_templates_random,nonce templates,3,2,0.5
+E07,Fanar-1-9B,base,last,item,nonce_templates_random,nonce templates,4,14,1.0
+E07,Fanar-1-9B,base,last,item,nonce_templates_random,nonce templates,5,4,1.0
+E07,Fanar-1-9B,base,last,item,nonce_templates_heldout_roots,nonce held-out roots,3,1,1.0
+E07,Fanar-1-9B,base,last,item,nonce_templates_heldout_roots,nonce held-out roots,4,17,1.0
+E07,Fanar-1-9B,base,last,item,nonce_templates_heldout_roots,nonce held-out roots,5,2,1.0
+E07,Fanar-1-9B,base,last,item,train_real_test_nonce_overlap,real -> nonce,3,11,0.7272727272727273
+E07,Fanar-1-9B,base,last,item,train_real_test_nonce_overlap,real -> nonce,4,72,0.7916666666666666
+E07,Fanar-1-9B,base,last,item,train_real_test_nonce_overlap,real -> nonce,5,17,1.0
+E07,Fanar-1-9B,base,last,item,train_nonce_test_real_overlap,nonce -> real,2,5,0.6
+E07,Fanar-1-9B,base,last,item,train_nonce_test_real_overlap,nonce -> real,3,30,0.9666666666666667
+E07,Fanar-1-9B,base,last,item,train_nonce_test_real_overlap,nonce -> real,4,15,1.0
+E07,Fanar-1-9B,base,last,item,real_roots_random,real roots,3,10,0.7
+E07,Fanar-1-9B,base,last,item,real_roots_random,real roots,4,11,0.7272727272727273
+E07,Fanar-1-9B,base,last,item,nonce_roots_random,nonce roots,3,4,1.0
+E07,Fanar-1-9B,base,last,item,nonce_roots_random,nonce roots,4,14,1.0
+E07,Fanar-1-9B,base,last,item,nonce_roots_random,nonce roots,5,2,1.0
+E07,Fanar-1-9B,base,last,item,nonce_roots_heldout_templates,nonce roots held-out templates,4,8,1.0
+E07,Fanar-1-9B,base,last,item,nonce_roots_heldout_templates,nonce roots held-out templates,5,12,1.0
+E07b,Fanar-1-9B,full,last,family,real_templates_random,real templates,2,1,1.0
+E07b,Fanar-1-9B,full,last,family,real_templates_random,real templates,3,17,0.8823529411764706
+E07b,Fanar-1-9B,full,last,family,real_templates_random,real templates,4,48,0.9791666666666666
+E07b,Fanar-1-9B,full,last,family,real_templates_random,real templates,5,6,0.8333333333333334
+E07b,Fanar-1-9B,full,last,family,nonce_templates_random,nonce templates,3,2,0.5
+E07b,Fanar-1-9B,full,last,family,nonce_templates_random,nonce templates,4,14,1.0
+E07b,Fanar-1-9B,full,last,family,nonce_templates_random,nonce templates,5,4,1.0
+E07b,Fanar-1-9B,full,last,family,nonce_templates_heldout_roots,nonce held-out roots,3,1,1.0
+E07b,Fanar-1-9B,full,last,family,nonce_templates_heldout_roots,nonce held-out roots,4,17,1.0
+E07b,Fanar-1-9B,full,last,family,nonce_templates_heldout_roots,nonce held-out roots,5,2,1.0
+E07b,Fanar-1-9B,full,last,family,train_real_test_nonce_overlap,real -> nonce,3,11,0.5454545454545454
+E07b,Fanar-1-9B,full,last,family,train_real_test_nonce_overlap,real -> nonce,4,72,0.75
+E07b,Fanar-1-9B,full,last,family,train_real_test_nonce_overlap,real -> nonce,5,17,1.0
+E07b,Fanar-1-9B,full,last,family,train_nonce_test_real_overlap,nonce -> real,2,5,0.6
+E07b,Fanar-1-9B,full,last,family,train_nonce_test_real_overlap,nonce -> real,3,54,0.8703703703703703
+E07b,Fanar-1-9B,full,last,family,train_nonce_test_real_overlap,nonce -> real,4,79,0.8860759493670886
+E07b,Fanar-1-9B,full,last,family,train_nonce_test_real_overlap,nonce -> real,5,12,0.75
+E07b,Fanar-1-9B,full,last,family,nonce_roots_random,nonce roots,3,4,1.0
+E07b,Fanar-1-9B,full,last,family,nonce_roots_random,nonce roots,4,14,1.0
+E07b,Fanar-1-9B,full,last,family,nonce_roots_random,nonce roots,5,2,1.0
+E07b,Fanar-1-9B,full,last,family,nonce_roots_heldout_templates,nonce roots held-out templates,4,8,1.0
+E07b,Fanar-1-9B,full,last,family,nonce_roots_heldout_templates,nonce roots held-out templates,5,12,1.0
+E08,ALLaM-7B,base,last,item,real_templates_random,real templates,1,15,0.6
+E08,ALLaM-7B,base,last,item,real_templates_random,real templates,2,11,0.8181818181818182
+E08,ALLaM-7B,base,last,item,nonce_templates_random,nonce templates,2,9,1.0
+E08,ALLaM-7B,base,last,item,nonce_templates_random,nonce templates,3,11,0.9090909090909091
+E08,ALLaM-7B,base,last,item,nonce_templates_heldout_roots,nonce held-out roots,2,7,1.0
+E08,ALLaM-7B,base,last,item,nonce_templates_heldout_roots,nonce held-out roots,3,13,1.0
+E08,ALLaM-7B,base,last,item,train_real_test_nonce_overlap,real -> nonce,2,55,0.5272727272727272
+E08,ALLaM-7B,base,last,item,train_real_test_nonce_overlap,real -> nonce,3,44,0.75
+E08,ALLaM-7B,base,last,item,train_real_test_nonce_overlap,real -> nonce,4,1,1.0
+E08,ALLaM-7B,base,last,item,train_nonce_test_real_overlap,nonce -> real,1,32,0.5
+E08,ALLaM-7B,base,last,item,train_nonce_test_real_overlap,nonce -> real,2,18,0.7222222222222222
+E08,ALLaM-7B,base,last,item,real_roots_random,real roots,1,17,0.35294117647058826
+E08,ALLaM-7B,base,last,item,real_roots_random,real roots,2,4,0.5
+E08,ALLaM-7B,base,last,item,nonce_roots_random,nonce roots,2,13,1.0
+E08,ALLaM-7B,base,last,item,nonce_roots_random,nonce roots,3,7,1.0
+E08,ALLaM-7B,base,last,item,nonce_roots_heldout_templates,nonce roots held-out templates,2,6,1.0
+E08,ALLaM-7B,base,last,item,nonce_roots_heldout_templates,nonce roots held-out templates,3,13,1.0
+E08,ALLaM-7B,base,last,item,nonce_roots_heldout_templates,nonce roots held-out templates,4,1,1.0
+E08b,ALLaM-7B,full,last,family,real_templates_random,real templates,1,27,0.7777777777777778
+E08b,ALLaM-7B,full,last,family,real_templates_random,real templates,2,38,0.8157894736842105
+E08b,ALLaM-7B,full,last,family,real_templates_random,real templates,3,7,0.8571428571428571
+E08b,ALLaM-7B,full,last,family,nonce_templates_random,nonce templates,2,9,1.0
+E08b,ALLaM-7B,full,last,family,nonce_templates_random,nonce templates,3,11,0.9090909090909091
+E08b,ALLaM-7B,full,last,family,nonce_templates_heldout_roots,nonce held-out roots,2,7,1.0
+E08b,ALLaM-7B,full,last,family,nonce_templates_heldout_roots,nonce held-out roots,3,13,1.0
+E08b,ALLaM-7B,full,last,family,train_real_test_nonce_overlap,real -> nonce,2,55,0.5636363636363636
+E08b,ALLaM-7B,full,last,family,train_real_test_nonce_overlap,real -> nonce,3,44,0.8636363636363636
+E08b,ALLaM-7B,full,last,family,train_real_test_nonce_overlap,real -> nonce,4,1,1.0
+E08b,ALLaM-7B,full,last,family,train_nonce_test_real_overlap,nonce -> real,1,63,0.23809523809523808
+E08b,ALLaM-7B,full,last,family,train_nonce_test_real_overlap,nonce -> real,2,74,0.8513513513513513
+E08b,ALLaM-7B,full,last,family,train_nonce_test_real_overlap,nonce -> real,3,13,0.7692307692307693
+E08b,ALLaM-7B,full,last,family,nonce_roots_random,nonce roots,2,13,1.0
+E08b,ALLaM-7B,full,last,family,nonce_roots_random,nonce roots,3,7,1.0
+E08b,ALLaM-7B,full,last,family,nonce_roots_heldout_templates,nonce roots held-out templates,2,6,1.0
+E08b,ALLaM-7B,full,last,family,nonce_roots_heldout_templates,nonce roots held-out templates,3,13,1.0
+E08b,ALLaM-7B,full,last,family,nonce_roots_heldout_templates,nonce roots held-out templates,4,1,1.0

@@ -14,10 +14,10 @@ Use this table as the source of truth for what has been run, what changed, and w
 | E05c | todo | TBD | `Qwen/Qwen3-1.7B-Base` | `full` | Nonce affixed-form augmentation/test | not implemented yet; nonce affixed forms are not in current data | TBD |
 | E06 | done | 2026-05-03 | `Qwen/Qwen3-8B` | `base` | Larger Qwen comparison | `MODEL=Qwen/Qwen3-8B SURFACE=base POOLING=last RUN_ID=E06 BATCH_SIZE=1 bash scripts/colab_run.sh` | [interpretation](results/E06/interpretation.md) |
 | E06b | done | 2026-05-03 | `Qwen/Qwen3-8B` | `full` | Larger Qwen full-form family split | `MODEL=Qwen/Qwen3-8B SURFACE=full POOLING=last REAL_SPLIT=family RUN_ID=E06b BATCH_SIZE=1 bash scripts/colab_run.sh` | [interpretation](results/E06b/interpretation.md) |
-| E07 | code ready | TBD | `QCRI/Fanar-1-9B` | `base` | Arabic-centric Fanar comparison | `MODEL=QCRI/Fanar-1-9B SURFACE=base POOLING=last RUN_ID=E07 BATCH_SIZE=1 bash scripts/colab_run.sh` | TBD |
-| E07b | code ready | TBD | `QCRI/Fanar-1-9B` | `full` | Fanar full-form family split | `MODEL=QCRI/Fanar-1-9B SURFACE=full POOLING=last REAL_SPLIT=family RUN_ID=E07b BATCH_SIZE=1 bash scripts/colab_run.sh` | TBD |
-| E08 | code ready | TBD | `humain-ai/ALLaM-7B-Instruct-preview` | `base` | Arabic-centric ALLaM comparison | `MODEL=humain-ai/ALLaM-7B-Instruct-preview SURFACE=base POOLING=last RUN_ID=E08 BATCH_SIZE=1 bash scripts/colab_run.sh` | TBD |
-| E08b | code ready | TBD | `humain-ai/ALLaM-7B-Instruct-preview` | `full` | ALLaM full-form family split | `MODEL=humain-ai/ALLaM-7B-Instruct-preview SURFACE=full POOLING=last REAL_SPLIT=family RUN_ID=E08b BATCH_SIZE=1 bash scripts/colab_run.sh` | TBD |
+| E07 | done | 2026-05-03 | `QCRI/Fanar-1-9B` | `base` | Arabic-centric Fanar comparison | `MODEL=QCRI/Fanar-1-9B SURFACE=base POOLING=last RUN_ID=E07 BATCH_SIZE=1 bash scripts/colab_run.sh` | [interpretation](results/E07/interpretation.md) |
+| E07b | done | 2026-05-03 | `QCRI/Fanar-1-9B` | `full` | Fanar full-form family split | `MODEL=QCRI/Fanar-1-9B SURFACE=full POOLING=last REAL_SPLIT=family RUN_ID=E07b BATCH_SIZE=1 bash scripts/colab_run.sh` | [interpretation](results/E07b/interpretation.md) |
+| E08 | done | 2026-05-03 | `humain-ai/ALLaM-7B-Instruct-preview` | `base` | Arabic-centric ALLaM comparison | `MODEL=humain-ai/ALLaM-7B-Instruct-preview SURFACE=base POOLING=last RUN_ID=E08 BATCH_SIZE=1 bash scripts/colab_run.sh` | [interpretation](results/E08/interpretation.md) |
+| E08b | done | 2026-05-03 | `humain-ai/ALLaM-7B-Instruct-preview` | `full` | ALLaM full-form family split | `MODEL=humain-ai/ALLaM-7B-Instruct-preview SURFACE=full POOLING=last REAL_SPLIT=family RUN_ID=E08b BATCH_SIZE=1 bash scripts/colab_run.sh` | [interpretation](results/E08b/interpretation.md) |
 | E09 | code ready | TBD | same model as current run | `base` | PCA/effective-dimensionality and activation outlier analysis | produced automatically by any command above as `representation_diagnostics.json` | TBD |
 | E10 | todo | TBD | model set | `base` | Linear probe + MLP probe, selectivity gap | not implemented yet | TBD |
 
@@ -25,4 +25,6 @@ Use this table as the source of truth for what has been run, what changed, and w
 
 The current strongest result is E03's template probing with last-token pooling: Qwen3-1.7B recovers template labels above chance, control, and n-gram baselines, especially for nonce held-out roots. Root probes are highly accurate but are mostly surface-solvable in the nonce data because the root consonants remain visible.
 
-E06/E06b show a positive scale effect within Qwen: Qwen3-8B improves template probing, especially real/nonce transfer, while preserving the same general pattern as Qwen3-1.7B. The next priority is Arabic-centric model comparison: E07/Fanar and E08/ALLaM.
+The model comparison is now complete for the planned set. Qwen3-8B is strongest on real/nonce transfer, Fanar is strongest on affixed real full-form family split and has the cleanest representation geometry, and ALLaM is weaker on real/transfer despite strong nonce template probes.
+
+Generated cross-run summaries and plots are in [results/summary/cross_model_summary.md](results/summary/cross_model_summary.md). The next research decision is whether nonce affix augmentation is worth adding before writing the paper narrative.
