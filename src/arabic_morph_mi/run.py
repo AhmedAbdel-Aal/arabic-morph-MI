@@ -47,6 +47,17 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--test-size", type=float, default=0.2)
     parser.add_argument("--seed", type=int, default=42)
     parser.add_argument("--dtype", default="auto", choices=["auto", "float16", "fp16", "bfloat16", "bf16", "float32"])
+    parser.add_argument(
+        "--save-representations",
+        action="store_true",
+        help="Save pooled hidden representations as compressed NPZ in the run folder.",
+    )
+    parser.add_argument(
+        "--representation-dtype",
+        choices=["float16", "float32"],
+        default="float16",
+        help="Storage dtype for saved representations. float16 is smaller and enough for exploration.",
+    )
     return parser.parse_args()
 
 
@@ -112,6 +123,35 @@ def real_root_split(items: list[Item], y: list[int], args: argparse.Namespace) -
         return train, test, "family"
     train, test = one_per_label_test_split(y, args.seed + 3)
     return train, test, "item"
+
+
+def save_representations(
+    path: Path,
+    hidden_by_text: dict[str, np.ndarray],
+    model_name: str,
+    surface: str,
+    pooling: str,
+    dtype: str,
+) -> None:
+    texts = sorted(hidden_by_text)
+    hidden = np.stack([hidden_by_text[text] for text in texts])
+    if dtype == "float16":
+        hidden = hidden.astype(np.float16)
+    elif dtype == "float32":
+        hidden = hidden.astype(np.float32)
+    else:
+        raise ValueError(f"Unsupported representation dtype: {dtype}")
+
+    path.parent.mkdir(parents=True, exist_ok=True)
+    np.savez_compressed(
+        path,
+        hidden=hidden,
+        texts=np.asarray(texts),
+        model=np.asarray(model_name),
+        surface=np.asarray(surface),
+        pooling=np.asarray(pooling),
+        dtype=np.asarray(str(hidden.dtype)),
+    )
 
 
 def main() -> None:
@@ -210,6 +250,17 @@ def main() -> None:
         },
     )
     plot_curves(results, run_dir / "curves.png")
+    if args.save_representations:
+        representation_path = run_dir / "hidden_representations.npz"
+        save_representations(
+            representation_path,
+            hidden_by_text,
+            model_name=args.model,
+            surface=args.surface,
+            pooling=args.pooling,
+            dtype=args.representation_dtype,
+        )
+        print(f"wrote {representation_path}")
     print(f"\nwrote {run_dir / 'results.json'}")
     print(f"wrote {run_dir / 'curves.png'}")
 
