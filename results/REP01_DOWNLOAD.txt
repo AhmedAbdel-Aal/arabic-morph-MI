@@ -1,0 +1,10 @@
+Representation runs are saved under:
+  /workspace/arabic-morph-MI/results/REP01_*
+
+From your local machine, download them with:
+  rsync -avz root@<RUNPOD_HOST>:/workspace/arabic-morph-MI/results/REP01_* ./results/
+
+Or:
+  scp -r root@<RUNPOD_HOST>:/workspace/arabic-morph-MI/results/REP01_* ./results/
+
+These folders contain hidden_representations.npz files. They are intentionally gitignored.
