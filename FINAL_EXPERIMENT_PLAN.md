@@ -80,7 +80,6 @@ Extended decoder candidates:
 ```text
 meta-llama/Meta-Llama-3-8B
 FreedomIntelligence/AceGPT-7B
-inceptionai/jais-13b
 ```
 
 Rationale:
@@ -88,10 +87,11 @@ Rationale:
 ```text
 Llama-3-8B: strong general multilingual decoder baseline.
 AceGPT-7B: Arabic-localized LLaMA-family decoder.
-Jais-13B: Arabic-English bilingual decoder-only model trained with substantial Arabic data.
 ```
 
-The extended set is valuable but not required for the first final run. Run it after the core matrix succeeds, because Jais may require `trust_remote_code` behavior/model-specific dependencies and is larger.
+The extended set is valuable but not required for the first final run.
+
+Jais-13B is intentionally excluded from the runnable matrix for now. It is gated and its current Hugging Face remote model code imports a Transformers utility that is missing in the current RunPod environment, so including it blocks the full run. We can revisit it later with a pinned compatible Transformers version or replace it with another Arabic/multilingual decoder.
 
 ## Final Runs
 
@@ -195,7 +195,7 @@ RUN_EVERYTHING=1 OUTPUT_DIR=results/final_everything BATCH_SIZE=1 bash scripts/r
 This runs:
 
 ```text
-7 models × 2 datasets × 2 surfaces = 28 runs
+6 models × 2 datasets × 2 surfaces = 24 runs
 ```
 
 ## Expected Outputs

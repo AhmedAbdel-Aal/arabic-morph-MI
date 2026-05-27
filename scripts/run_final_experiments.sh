@@ -34,13 +34,11 @@ CORE_MODEL_IDS=(
 EXTENDED_MODELS=(
   "meta-llama/Meta-Llama-3-8B"
   "FreedomIntelligence/AceGPT-7B"
-  "inceptionai/jais-13b"
 )
 
 EXTENDED_MODEL_IDS=(
   "llama3_8b"
   "acegpt7b"
-  "jais13b"
 )
 
 step() {
