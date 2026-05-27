@@ -214,10 +214,16 @@ marimo/_static/
 marimo/_lsp/
 __marimo__/
 
-# Large saved hidden states for local analysis. Download these from RunPod directly;
-# do not commit them to git.
-results/**/hidden_representations.npz
-representations/
+
+# Large generated corpus samples and morphology candidates.
+data_generation/runs/*
+!data_generation/runs/.gitkeep
+data_generation/archive/*
+!data_generation/archive/.gitkeep
 
 # Streamlit
 .streamlit/secrets.toml
+
+
+
+camel_treebank_1.1

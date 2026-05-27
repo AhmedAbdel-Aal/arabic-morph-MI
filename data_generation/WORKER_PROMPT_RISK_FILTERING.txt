@@ -1,0 +1,467 @@
+SUPERSEDED NOTE
+===============
+
+This handoff was written before we corrected the audit framing. Do not use it as the primary protocol.
+
+Use:
+
+  data_generation/AUDIT_PROTOCOL.md
+
+The current framing is item-level morphology classification:
+
+  transparent_derived
+  verbal_noun_or_masdar
+  primitive_lexical
+  proper_name_or_place
+  foreign_or_loanword
+  context_mismatch
+  analyzer/matcher error
+
+Primitive lexical nouns are not "bad Arabic" and do not necessarily lack awzan. They should be separated from the main derived-morphology dataset, not erased by dropping whole templates.
+
+Original handoff below is kept only for historical context.
+
+You are a worker agent helping with an Arabic morphology mechanistic-interpretability study.
+
+Repository:
+  /Users/ahmed/Desktop/arabic_merph_probs/arabic-morph-MI
+
+Your task is to improve the DATA GENERATION / FILTERING stage only.
+Do not change the probing/model-analysis code unless explicitly asked.
+
+Scientific context
+==================
+
+We are building a larger Akeel-style dataset for probing Arabic root-pattern morphology inside LLM representations.
+
+The current small baseline dataset is similar to the setup in Akeel et al.: root-template forms, with base and affixed variants, used to probe whether model hidden states encode morphology. The next step is to scale the dataset from naturally occurring Arabic sentences, while keeping enough linguistic cleanliness that probing results are meaningful.
+
+We already built a sentence-to-candidate pipeline:
+
+  Arabic Billion Words sentences
+  -> CAMEL analyses
+  -> root/template/affix candidates
+  -> token-level and type-level views
+  -> manual audit sample
+
+The problem: CAMEL plus mechanical template matching produces many candidates that formally match a template but are not good study items. The clearest failure class is lexical/frozen/common nouns that happen to fit a pattern. Example:
+
+  surface: لترابه
+  root: ت.ر.ب
+  template: فعال
+  base/canonical base: تراب
+  pos: noun
+  sentence: ... العاشقين لترابه ...
+
+This is a normal lexical noun ("soil/dust") with a possessive/prepositional affix, not the kind of productive derivational morphology item we want to treat as evidence about root-pattern composition. We should not simply drop the whole template فعال, because that would also remove valid morphology items. The goal is to identify risk classes and audit them, not to destroy broad coverage.
+
+Important principle:
+
+  Do NOT solve this by deleting all nouns.
+  Do NOT solve this by deleting all rows for templates like فعال / فعيل / فعول.
+  Do NOT treat CAMEL as gold truth.
+  Do NOT claim the generated data is final gold without audit.
+
+Input data now in place
+=======================
+
+The active broad run is restored here:
+
+  data_generation/runs/abw_10k_broad/
+
+Files:
+
+  data_generation/runs/abw_10k_broad/sentences.jsonl
+    10,000 sampled sentence rows from Arabic Billion Words, config Almasryalyoum.
+
+  data_generation/runs/abw_10k_broad/candidates.jsonl
+    34,489 token-level candidate rows.
+    Repeated words in different sentences remain separate rows.
+    Each row contains sentence provenance, token index, CAMEL compact analysis, root, template, affix fields, and surface fields.
+
+  data_generation/runs/abw_10k_broad/extraction_report.json
+    Summary from extraction.
+
+  data_generation/runs/abw_10k_broad/views/token_level.jsonl
+    34,489 token-level rows, same granularity as candidates.
+
+  data_generation/runs/abw_10k_broad/views/type_level.jsonl
+    6,599 unique type rows.
+    Deduplicated by root/template/canonical base/full form/prefix/suffix/surface rule.
+    This is the main file to audit first.
+
+  data_generation/runs/abw_10k_broad/views/view_report.json
+    Summary of token/type views.
+
+Baseline / comparison files:
+
+  data/productivity_dataset.json
+    The original Akeel-style small dataset used by the probing experiments.
+
+  data/productivity_dataset_with_sentences.json
+    A sentence-augmented baseline file used for the extraction audit prototype.
+
+Relevant scripts
+================
+
+Read these before editing:
+
+  data_generation/README.md
+  data_generation/scripts/common.py
+  data_generation/scripts/sample_abw_sentences.py
+  data_generation/scripts/extract_candidates.py
+  data_generation/scripts/make_views.py
+  data_generation/scripts/sample_audit_items.py
+  data_generation/scripts/audit_server.py
+
+Current important caveat:
+
+  data_generation/scripts/extract_candidates.py currently has --filter-mode broad and --filter-mode derived.
+
+  The "derived" mode was an exploratory hard filter. It drops noun rows from lexical-noun-heavy templates such as فعال, فعيل, فعول, فعلان, فعلاء. That is too blunt for the final dataset strategy because valid study items can appear in those templates.
+
+  You may inspect this mode, but do not use it as the final answer unless you produce a strong audit-backed justification. Prefer risk-flagging over hard deletion.
+
+Known examples / issues to keep in mind
+=======================================
+
+1. Lexical concrete/common nouns that fit a pattern mechanically:
+   - تراب / لترابه as فعال, root ت.ر.ب
+   - فريق / الفريق as فعيل, root ف.ر.ق
+   - الحكومة as فعول, root ح.ك.م
+
+2. Proper names, places, nationalities, and named entities:
+   - لبنان / لبناني
+   - محمود
+   These may have roots/templates in CAMEL but are often bad controlled morphology items.
+
+3. Context mismatch:
+   Example from candidates:
+   - "باسم الحكومة"
+   CAMEL can analyze باسم as "smiling" from ب.س.م with template فاعل, but in context it means "in the name of / on behalf of", not the morphological target we want.
+
+4. Ambiguous CAMEL analyses:
+   Some tokens have many possible analyses. The pipeline currently picks candidate analyses by matching root/template/surface. High ambiguity should be treated as a risk signal, not automatically accepted.
+
+5. Surface spelling rules:
+   Example:
+   - canonical_base_form: كتابة
+   - surface_stem before possessive suffix: كتابت
+   This is correct. Do not confuse bound surface stem with canonical base.
+
+What you must do
+================
+
+Your main job is to turn the broad candidate set into a risk-aware dataset and audit plan.
+
+Step 1: Understand and summarize the current data
+-------------------------------------------------
+
+Inspect the broad type-level and token-level data.
+
+Report:
+  - number of rows
+  - counts by template
+  - counts by POS
+  - counts by prefix/suffix/has_affix
+  - counts by CAMEL ambiguity ranges
+  - examples from each major template/POS bucket
+  - obvious systematic error classes
+
+Do this before changing code.
+
+Step 2: Design risk flags
+-------------------------
+
+Add explicit risk flags to rows instead of deleting rows.
+
+Suggested flags include, but are not limited to:
+
+  risk_lexical_noun_heavy_template
+    Noun row in a template known to contain many frozen lexical nouns, such as فعال, فعيل, فعول, فعلان, فعلاء.
+
+  risk_proper_or_place_name_like
+    Looks like a proper name, place, nationality, or named entity.
+    You may use CAMEL gloss/lex fields, capitalization is not useful in Arabic, sentence context, or simple lexical cues.
+
+  risk_context_mismatch_candidate
+    The CAMEL analysis/root/template seems plausible in isolation but mismatches the sentence meaning.
+    This may be difficult to automate fully; at least surface it for audit.
+
+  risk_high_camel_ambiguity
+    CAMEL returned many analyses. Pick a threshold after inspecting the distribution.
+
+  risk_functionalized_or_idiomatic_use
+    Example: باسم in باسم الحكومة.
+
+  risk_template_pos_mismatch
+    Template/POS combination is suspicious for this study.
+
+  risk_normalized_surface_only
+    Match depends on normalization or surface rewrite in a way that deserves audit.
+
+  safe_derived_verb
+    Verb rows in templates such as استفعل / انفعل, when surface and root match cleanly.
+
+  safe_participle_or_adjective
+    Clear adjective/participle-like rows, especially فاعل, مفعول, مفتعل where context agrees.
+
+  safe_verbal_noun_candidate
+    Clear verbal noun/masdar-like rows, e.g. افتعال / فعالة when context agrees.
+
+You can revise names, but keep them simple and documented.
+
+Every row should get:
+
+  risk_flags: list[str]
+  risk_bucket: one of low / medium / high
+  risk_notes: short machine-readable explanation if helpful
+
+Do not overwrite the broad input files. Write new files to a new run folder, for example:
+
+  data_generation/runs/abw_10k_broad_risk/
+
+Step 3: Implement the risk-flagging script
+------------------------------------------
+
+Create a simple script, preferably:
+
+  data_generation/scripts/add_risk_flags.py
+
+The script should read token-level or type-level JSONL and write JSONL with the new risk fields.
+
+Expected command shape:
+
+  python data_generation/scripts/add_risk_flags.py \
+    --input data_generation/runs/abw_10k_broad/views/type_level.jsonl \
+    --output data_generation/runs/abw_10k_broad_risk/type_level_risk.jsonl \
+    --report data_generation/runs/abw_10k_broad_risk/risk_report_type.json
+
+And similarly for token-level:
+
+  python data_generation/scripts/add_risk_flags.py \
+    --input data_generation/runs/abw_10k_broad/views/token_level.jsonl \
+    --output data_generation/runs/abw_10k_broad_risk/token_level_risk.jsonl \
+    --report data_generation/runs/abw_10k_broad_risk/risk_report_token.json
+
+Keep the implementation direct and readable. This is research code, not a framework.
+
+Step 4: Build a better audit sample
+-----------------------------------
+
+The existing audit sampler stratifies mostly by template. That is not enough.
+
+Create or update a sampler so it can sample by risk bucket/flag/template.
+
+Target sample:
+
+  data_generation/runs/abw_10k_broad_risk/audit_sample_500_risk_stratified.jsonl
+
+Desired composition:
+
+  - include all 13 templates when possible
+  - include high-risk noun-heavy-template rows
+  - include low-risk verbs/adjectives/participles
+  - include medium-risk rows
+  - include affixed and unaffixed rows
+  - include repeated-common forms only at type level, not every repeated token
+
+Suggested 500-row allocation:
+
+  - 200 high-risk rows
+  - 200 low-risk rows
+  - 100 medium/borderline rows
+
+If exact allocation is impossible, document the actual allocation.
+
+Step 5: Make the audit UI show risk information
+-----------------------------------------------
+
+If needed, update:
+
+  data_generation/scripts/audit_server.py
+
+The reviewer should be able to see:
+
+  - surface/full form
+  - canonical base form
+  - surface stem
+  - root
+  - template
+  - POS
+  - prefix/suffix
+  - CAMEL compact analysis, especially gloss/lex/pattern/source
+  - CAMEL ambiguity
+  - risk flags
+  - risk bucket
+  - example sentence
+  - source URL if present
+
+The reviewer should decide:
+
+  accept
+    Good root-template morphology item for the study.
+
+  reject
+    Bad item for the study.
+
+  unsure
+    Needs native-speaker/linguist review or more context.
+
+Useful rejection reasons:
+
+  lexicalized_common_noun
+  proper_name_or_place
+  context_mismatch
+  wrong_root
+  wrong_template
+  affix_parse_wrong
+  not_msa_or_bad_text
+  duplicate_or_uninformative
+  other
+
+Step 6: Produce reports
+-----------------------
+
+Write a concise markdown report under the risk run folder:
+
+  data_generation/runs/abw_10k_broad_risk/RISK_FILTERING_REPORT.md
+
+It should answer:
+
+  - What data was inspected?
+  - What are the main risk classes?
+  - How many rows fall into each risk bucket?
+  - Which templates/POS combinations are most risky?
+  - Which examples show the problem clearly?
+  - What audit sample was produced?
+  - What should be manually reviewed before calling the data gold?
+  - What filtering policy is recommended after audit?
+
+Also write machine-readable reports:
+
+  risk_report_type.json
+  risk_report_token.json
+  audit_sample_report.json
+
+Step 7: Update README instructions
+----------------------------------
+
+Update:
+
+  data_generation/README.md
+
+Add the risk-flagging step after view generation and before manual audit.
+Make clear that:
+
+  - broad extraction is the source of truth for candidate discovery
+  - risk-flagging marks likely noise
+  - audit determines what becomes final
+  - hard template deletion is not the preferred final strategy
+
+Deliverables
+============
+
+At the end, provide:
+
+1. Code changes:
+   - new/updated scripts under data_generation/scripts/
+   - README update
+
+2. Generated outputs:
+   - data_generation/runs/abw_10k_broad_risk/type_level_risk.jsonl
+   - data_generation/runs/abw_10k_broad_risk/token_level_risk.jsonl
+   - data_generation/runs/abw_10k_broad_risk/risk_report_type.json
+   - data_generation/runs/abw_10k_broad_risk/risk_report_token.json
+   - data_generation/runs/abw_10k_broad_risk/audit_sample_500_risk_stratified.jsonl
+   - data_generation/runs/abw_10k_broad_risk/audit_sample_report.json
+   - data_generation/runs/abw_10k_broad_risk/RISK_FILTERING_REPORT.md
+
+3. A final message with:
+   - files changed
+   - exact commands run
+   - row counts
+   - the risk bucket distribution
+   - any unresolved concerns
+
+Validation commands to run
+==========================
+
+Use these as a starting point, adapting paths if needed.
+
+Inspect current data:
+
+  wc -l \
+    data_generation/runs/abw_10k_broad/sentences.jsonl \
+    data_generation/runs/abw_10k_broad/candidates.jsonl \
+    data_generation/runs/abw_10k_broad/views/token_level.jsonl \
+    data_generation/runs/abw_10k_broad/views/type_level.jsonl
+
+Run risk flagging:
+
+  python data_generation/scripts/add_risk_flags.py \
+    --input data_generation/runs/abw_10k_broad/views/type_level.jsonl \
+    --output data_generation/runs/abw_10k_broad_risk/type_level_risk.jsonl \
+    --report data_generation/runs/abw_10k_broad_risk/risk_report_type.json
+
+  python data_generation/scripts/add_risk_flags.py \
+    --input data_generation/runs/abw_10k_broad/views/token_level.jsonl \
+    --output data_generation/runs/abw_10k_broad_risk/token_level_risk.jsonl \
+    --report data_generation/runs/abw_10k_broad_risk/risk_report_token.json
+
+Create audit sample:
+
+  First update the sampler so it can stratify by risk_bucket/risk_flags as well as template.
+  The exact CLI can differ, but it should support a command equivalent to:
+
+  python data_generation/scripts/sample_audit_items.py \
+    --input data_generation/runs/abw_10k_broad_risk/type_level_risk.jsonl \
+    --output data_generation/runs/abw_10k_broad_risk/audit_sample_500_risk_stratified.jsonl \
+    --n 500 \
+    --seed 17 \
+    --strategy risk_stratified
+
+Start audit UI:
+
+  python data_generation/scripts/audit_server.py \
+    --sample data_generation/runs/abw_10k_broad_risk/audit_sample_500_risk_stratified.jsonl \
+    --audit-state data_generation/runs/abw_10k_broad_risk/audit_state.json \
+    --port 8765
+
+What not to do
+==============
+
+Do not move or delete the archived files unless explicitly asked.
+
+Do not overwrite:
+
+  data_generation/runs/abw_10k_broad/
+
+Do not treat:
+
+  data_generation/archive/20260521_pre_derived_filter/abw_10k/audit_state.json
+
+as clean gold. That was an earlier partial audit attempt and should remain historical context only.
+
+Do not make the final study depend on a single heuristic like "noun + فعال = bad".
+The correct direction is:
+
+  broad candidates
+  -> risk flags
+  -> stratified manual audit
+  -> audit-backed filtering policy
+  -> final dataset
+
+Expected scientific outcome
+===========================
+
+This worker task does not need to produce the final paper dataset. It should produce the machinery that lets us decide, with evidence, which broad CAMEL/template candidates are reliable enough for the larger morphology probing study.
+
+The best result is not "maximum rows".
+The best result is a defensible pipeline where every retained item can be traced to:
+
+  sentence evidence,
+  CAMEL analysis,
+  root/template match,
+  risk classification,
+  and eventually human audit.

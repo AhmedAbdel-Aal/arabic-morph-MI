@@ -160,7 +160,7 @@ def main() -> None:
 
     real = make_items(payload, "real", args.surface)
     nonce = make_items(payload, "nonce", "base")
-    real_overlap, nonce_overlap = overlap_by_label(real, nonce)
+    real_overlap, nonce_overlap = overlap_by_label(real, nonce) if nonce else ([], [])
 
     experiments = {}
     skipped_experiments = {}
@@ -169,15 +169,24 @@ def main() -> None:
     train, test, split_kind = real_random_split(real, y, args)
     experiments["real_templates_random"] = (real, labels, y, train, test, split_kind)
 
-    labels, y = with_labels(nonce, "template")
-    train, test = random_split(y, args.test_size, args.seed + 1)
-    experiments["nonce_templates_random"] = (nonce, labels, y, train, test, "item")
+    if nonce:
+        labels, y = with_labels(nonce, "template")
+        train, test = random_split(y, args.test_size, args.seed + 1)
+        experiments["nonce_templates_random"] = (nonce, labels, y, train, test, "item")
 
-    train, test = heldout_root_split(nonce, y, args.test_size, args.seed + 2)
-    experiments["nonce_templates_heldout_roots"] = (nonce, labels, y, train, test, "heldout_root")
+        train, test = heldout_root_split(nonce, y, args.test_size, args.seed + 2)
+        experiments["nonce_templates_heldout_roots"] = (nonce, labels, y, train, test, "heldout_root")
 
-    experiments["train_real_test_nonce_overlap"] = (*explicit_split(real_overlap, nonce_overlap, "template"), "explicit")
-    experiments["train_nonce_test_real_overlap"] = (*explicit_split(nonce_overlap, real_overlap, "template"), "explicit")
+        if real_overlap and nonce_overlap:
+            experiments["train_real_test_nonce_overlap"] = (*explicit_split(real_overlap, nonce_overlap, "template"), "explicit")
+            experiments["train_nonce_test_real_overlap"] = (*explicit_split(nonce_overlap, real_overlap, "template"), "explicit")
+        else:
+            skipped_experiments["real_nonce_overlap"] = "No overlapping real/nonce templates."
+    else:
+        skipped_experiments["nonce_templates_random"] = "Dataset has no nonce rows."
+        skipped_experiments["nonce_templates_heldout_roots"] = "Dataset has no nonce rows."
+        skipped_experiments["train_real_test_nonce_overlap"] = "Dataset has no nonce rows."
+        skipped_experiments["train_nonce_test_real_overlap"] = "Dataset has no nonce rows."
 
     real_roots = keep_labels_with_min_count(real, "root", min_count=2)
     labels, y = with_labels(real_roots, "root")
@@ -188,12 +197,16 @@ def main() -> None:
     else:
         experiments["real_roots_random"] = (real_roots, labels, y, train, test, split_kind)
 
-    labels, y = with_labels(nonce, "root")
-    train, test = random_split(y, args.test_size, args.seed + 4)
-    experiments["nonce_roots_random"] = (nonce, labels, y, train, test, "item")
+    if nonce:
+        labels, y = with_labels(nonce, "root")
+        train, test = random_split(y, args.test_size, args.seed + 4)
+        experiments["nonce_roots_random"] = (nonce, labels, y, train, test, "item")
 
-    train, test = heldout_template_split(nonce, y, args.test_size, args.seed + 5)
-    experiments["nonce_roots_heldout_templates"] = (nonce, labels, y, train, test, "heldout_template")
+        train, test = heldout_template_split(nonce, y, args.test_size, args.seed + 5)
+        experiments["nonce_roots_heldout_templates"] = (nonce, labels, y, train, test, "heldout_template")
+    else:
+        skipped_experiments["nonce_roots_random"] = "Dataset has no nonce rows."
+        skipped_experiments["nonce_roots_heldout_templates"] = "Dataset has no nonce rows."
 
     texts = sorted({item.text for exp in experiments.values() for item in exp[0]})
     tokenizer, model, input_device = load_model(args.model, args.dtype)

@@ -49,10 +49,11 @@ fi
 step "Dataset summary"
 python - <<'PY'
 import json
+import os
 from collections import Counter
 from pathlib import Path
 
-path = Path("data/productivity_dataset.json")
+path = Path(os.environ.get("DATA_PATH", "data/productivity_dataset.json"))
 payload = json.loads(path.read_text(encoding="utf-8"))
 for key in ["real_roots", "nonce_roots"]:
     rows = payload[key]
