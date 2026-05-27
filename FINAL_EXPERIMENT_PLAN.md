@@ -140,6 +140,28 @@ OUTPUT_DIR=results/final
 
 Hidden representations are saved by default because geometry analysis and later steering work need them.
 
+Monitoring files are written automatically:
+
+```text
+results/final/RUN_STATUS.md
+results/final/logs/<run_id>.log
+results/final/.run_state/
+```
+
+Inside tmux, use:
+
+```bash
+watch -n 20 'sed -n "1,220p" results/final/RUN_STATUS.md'
+```
+
+For the currently running job:
+
+```bash
+tail -f results/final/logs/<run_id>.log
+```
+
+The script is resumable. If a run folder already has `results.json`, it is marked `skipped`. If a run folder exists without `results.json`, it is marked `failed` as a partial output and the script stops so you can inspect or move it.
+
 To skip representation saving:
 
 ```bash
