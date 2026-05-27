@@ -186,6 +186,18 @@ Run core and extended together only on a fresh output directory:
 MODEL_SET=all OUTPUT_DIR=results/final_all bash scripts/run_final_experiments.sh
 ```
 
+One-command full launch for all model sets, both datasets, and both surfaces:
+
+```bash
+RUN_EVERYTHING=1 OUTPUT_DIR=results/final_everything BATCH_SIZE=1 bash scripts/run_final_experiments.sh
+```
+
+This runs:
+
+```text
+7 models × 2 datasets × 2 surfaces = 28 runs
+```
+
 ## Expected Outputs
 
 ```text
