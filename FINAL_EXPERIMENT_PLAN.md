@@ -198,6 +198,8 @@ This runs:
 6 models × 2 datasets × 2 surfaces = 24 runs
 ```
 
+The full launch runs `scripts/verify_final_experiments.py` before reporting completion. The verifier checks required artifacts, embedded model/configuration metadata, and accidental cross-model representation duplication.
+
 ## Expected Outputs
 
 ```text

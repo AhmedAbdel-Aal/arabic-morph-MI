@@ -95,6 +95,9 @@ render_status() {
   local running_count=0
   local failed_count=0
   local pending_count=0
+  local spec run_id dataset_id data_path model model_id surface real_split
+  local _dataset_id _data_path _model _model_id _surface _real_split
+  local state log_path
 
   for spec in "${PLANNED_RUNS[@]}"; do
     IFS='|' read -r run_id _dataset_id _data_path _model _model_id _surface _real_split <<< "$spec"
@@ -146,9 +149,8 @@ render_status() {
     echo "|---|---|---|---|---|---|---|"
     for spec in "${PLANNED_RUNS[@]}"; do
       IFS='|' read -r run_id dataset_id _data_path model _model_id surface real_split <<< "$spec"
-      local state
       state="$(run_state "$run_id")"
-      local log_path="$LOG_DIR/${run_id}.log"
+      log_path="$LOG_DIR/${run_id}.log"
       echo "| $(state_icon "$state") | \`$run_id\` | \`$model\` | \`$dataset_id\` | \`$surface\` | \`$real_split\` | \`$log_path\` |"
     done
     echo
@@ -294,6 +296,11 @@ for i in "${!MODELS[@]}"; do
     run_probe "NATURAL100" "data/productivity_dataset_natural_almost100.json" "$model" "$model_id" "base" "item"
   fi
 done
+
+if [ "$RUN_EVERYTHING" = "1" ]; then
+  step "Verifying full experiment matrix"
+  python scripts/verify_final_experiments.py --output-dir "$OUTPUT_DIR"
+fi
 
 step "Finished final experiment matrix"
 render_status
